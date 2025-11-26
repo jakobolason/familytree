@@ -32,7 +32,7 @@
               stroke="steelblue"
               stroke-width="1.5"
               :fill="node._children ? 'lightsteelblue' : '#fff'"
-              @click.stop="openNode(node)"
+              @click.stop="openEditNode(node)"
               class="node-circle"
             />
 
@@ -40,7 +40,7 @@
               dy="0.35em"
               :x="node.children || node._children ? -13 : 13"
               :text-anchor="node.children || node._children ? 'end' : 'start'"
-              @click.stop="openNode(node)"
+              @click.stop="openEditNode(node)"
               class="node-text"
             >
               {{ node.data.name }}
@@ -56,6 +56,7 @@
 import * as d3 from "d3";
 import { ref, onMounted } from "vue";
 import { familyTreeData } from "../../shared/lib/treeData.js";
+const { openEditNode } = useEditNode();
 
 // --- STATE ---
 const rawData = ref(structuredClone(familyTreeData)); // Deep copy to prevent HMR issues

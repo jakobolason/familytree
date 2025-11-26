@@ -5,6 +5,6 @@
     </div>
 
     <FamilyTree />
-    <EditNode />
+    <!-- <EditNode /> -->
   </div>
 </template>
