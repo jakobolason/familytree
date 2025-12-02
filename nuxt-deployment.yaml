@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nuxt-app
-        image: jakobolason/familtree-nuxt:dev
+        image: jakobolason/familytree-nuxt:dev
         # imagePullPolicy: Never  # Since we loaded the image locally
         ports:
         - containerPort: 3000
