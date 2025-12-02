@@ -22,8 +22,21 @@ spec:
         - containerPort: 8086
           name: http
         env:
+        # - name: DB_USER
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: postgres-credentials
+        #       key: user
+        # - name: DB_PASSWD:
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: postgres-credentials
+        #       key: password 
         - name: DATABASE_URL
-          value: "postgresql://dev:devpassword@postgres:5432/myapp"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db_url
         - name: SERVER_BINDING
           value: "0.0.0.0"
         - name: RUST_LOG
