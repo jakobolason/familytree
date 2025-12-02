@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: familytree-ingress
+  namespace: default
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-strip-api-prefix@kubernetescrd
+spec:
+  rules:
+  - http:
+      paths:
+      # Backend API at /api/*
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: axum-app
+            port:
+              number: 8086
+      # Frontend at /*
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nuxt-app
+            port:
+              number: 3000
+
+---
+# Middleware to strip /api prefix when routing to backend
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-api-prefix
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /api
