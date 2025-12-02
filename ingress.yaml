@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: familytree-ingress
+  namespace: default
+spec:
+  rules:
+  # Frontend
+  - host: familytree.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nuxt-app
+            port:
+              number: 3000
+  
+  # Backend API
+  - host: api.familytree.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: axum-app
+            port:
+              number: 8086

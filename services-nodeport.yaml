@@ -1,0 +1,34 @@
+# Nuxt Frontend Service (NodePort for external reverse proxy)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nuxt-app
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: nuxt-app
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30000  # Accessible at localhost:30000
+    protocol: TCP
+    name: http
+
+---
+# Axum Backend Service (NodePort for external reverse proxy)
+apiVersion: v1
+kind: Service
+metadata:
+  name: axum-app
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: axum-app
+  ports:
+  - port: 8086
+    targetPort: 8086
+    nodePort: 30086  # Accessible at localhost:30086
+    protocol: TCP
+    name: http
