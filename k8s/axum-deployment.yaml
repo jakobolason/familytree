@@ -16,12 +16,14 @@ spec:
     spec:
       containers:
       - name: axum-app
-        image: jakobolason/familytree-axum:dev
+        image: jakobolason/familytree-axum:latest
         # imagePullPolicy: Never  # Since we loaded the image locally
         ports:
         - containerPort: 8086
           name: http
         env:
+        - name: LOCO_ENV
+          value: production
         # - name: DB_USER
         #   valueFrom:
         #     secretKeyRef:
@@ -38,6 +40,8 @@ spec:
           value: "0.0.0.0"
         - name: RUST_LOG
           value: "info"
+        - name: AUTH_SECRET
+          value: "some-super-secret-key-change-later-dumbo"
         resources:
           requests:
             memory: "128Mi"
