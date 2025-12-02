@@ -10,7 +10,7 @@
       <template #right>
         <UColorModeButton />
         <UButton
-          to="https://github.com/jakobolason/familytree_nuxt"
+          to="https://github.com/jakobolason/familytree"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
