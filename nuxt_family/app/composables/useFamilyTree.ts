@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { familyTreeData } from "../../shared/lib/treeData";
+import { familyTreeData } from "./treeData";
 
 export const useFamilyTree = () => {
   // State

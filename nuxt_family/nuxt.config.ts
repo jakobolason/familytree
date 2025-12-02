@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     "@nuxt/hints",
     "@nuxt/image",
     "@nuxt/test-utils",
+    "@sidebase/nuxt-auth",
   ],
 
   devtools: {
@@ -15,6 +16,41 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
+  },
+
+  auth: {
+    isEnabled: true,
+    disableServerSideAuth: false,
+    originEnvKey: 'AUTH_ORIGIN',
+    // baseURL: 'http://localhost:8086/api',
+    globalAppMiddleware: true,
+    provider: {
+      type: 'local',
+      endpoints: {
+        signIn: { path: 'auth/login', method: 'post' },
+        signOut: { path: 'auth/logout', method: 'post' },
+        signUp: false,
+        // getSession: { path: '/user/current', method: 'get' },
+      },
+      token: {
+        signInResponseTokenPointer: '/token',
+        type: 'Bearer',
+        cookieName: 'auth.token',
+        headerName: 'Authorization',
+        maxAgeInSeconds: 1800,
+        sameSiteAttribute: 'lax',
+        //cookieDomain: 'localhost',
+        secureCookieAttribute: false,
+        httpOnlyCookieAttribute: false,
+      },
+      sessionRefresh: {
+        enablePeriodically: true,
+        enableOnWindowFocus: true,
+      },
+      pages: {
+        login: '/login'
+      }
+    }
   },
 
   compatibilityDate: "2025-01-15",

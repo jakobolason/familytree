@@ -2,6 +2,9 @@
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
+const {signIn } = useAuth()
+const toast = useToast()
+
 const schema = z.object({
   email: z.email("Invalid email"),
   password: z
@@ -16,13 +19,46 @@ const state = reactive<Partial<Schema>>({
   password: undefined,
 });
 
-const toast = useToast();
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({
-    title: "Success",
-    description: "The form has been submitted.",
-    color: "success",
-  });
+  try {
+    const result = await signIn({
+      email: event.data.email,
+      password: event.data.password,
+    }, {callbackUrl: '/'});
+
+    if (result?.error) {
+      toast.add({
+        title: "Authentication Failed",
+        description: result.error || "Invalid email or password.",
+        color: "error",
+      });
+    } else {
+      toast.add({
+        title: "Success",
+        description: "You have been logged in successfully.",
+        color: "success",
+      });
+      // Optional: redirect after successful login
+      await navigateTo('/');
+    }
+  } catch (error) {
+    if (String(error).includes("FetchError")) {
+      console.error("Unauthorized credentials")
+      toast.add({
+        title: "Authentication Failed",
+        description: "Invalid email or password.",
+        color: "error",
+      });
+    } else {
+      toast.add({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        color: "error",
+      });
+      console.error('Login error:', );
+      console.log(error);
+    }
+      }
   console.log(event.data);
 }
 </script>
