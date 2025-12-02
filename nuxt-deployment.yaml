@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: nuxt-app
-        image: jakobolason/familtree-nuxt:latest
+        image: jakobolason/familtree-nuxt:dev
         # imagePullPolicy: Never  # Since we loaded the image locally
         ports:
         - containerPort: 3000
           name: http
         env:
         - name: AUTH_ORIGIN
-          value: "http://192.168.0.202/api/api"
+          value: "http://api.jakobolason.dk/api"
         # For SSR calls to backend (server-side)
         # - name: NUXT_PUBLIC_API_BASE
           # value: "http://axum-app:8086"
