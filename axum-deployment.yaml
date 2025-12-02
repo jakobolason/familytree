@@ -33,10 +33,7 @@ spec:
         #       name: postgres-credentials
         #       key: password 
         - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: db_url
+          value: "postgresql://dev:devpassword@postgres:5432/myapp"
         - name: SERVER_BINDING
           value: "0.0.0.0"
         - name: RUST_LOG
