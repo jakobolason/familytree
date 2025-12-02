@@ -13,13 +13,13 @@ spec:
   storageClassName: local-path  # k3s default storage class
 
 ---
-# PostgreSQL Deployment
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet 
 metadata:
   name: postgres
   namespace: default
 spec:
+  serviceName: "postgres"
   replicas: 1
   selector:
     matchLabels:
@@ -40,9 +40,15 @@ spec:
         - name: POSTGRES_DB
           value: "myapp"
         - name: POSTGRES_USER
-          value: "dev"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: user
         - name: POSTGRES_PASSWORD
-          value: "devpassword"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password 
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
         volumeMounts:
