@@ -30,6 +30,8 @@ spec:
           value: "https://api.jakobolason.dk"
         - name: NUXT_PUBLIC_AUTH_BASE_URL
           value: "https://api.jakobolason.dk"
+        - name: NITRO_ROUTE_RULES
+          value: '{"/api/**": {"proxy": "http://axum-app:8086/api/**"}}'
         # For SSR calls to backend (server-side)
         # - name: NUXT_PUBLIC_API_BASE
           # value: "http://axum-app:8086"
