@@ -20,23 +20,23 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      authBase: ''
+      baseURL: '/api/auth'
     }
   },
 
   auth: {
     isEnabled: true,
     disableServerSideAuth: false,
-    originEnvKey: 'AUTH_ORIGIN',
+    // originEnvKey: 'AUTH_ORIGIN',
     // baseUrl: process.env.AUTH_ORIGIN,
     // baseURL: 'http://localhost:8086/api',
     globalAppMiddleware: true,
     provider: {
       type: 'local',
       endpoints: {
-        signIn: { path: 'auth/login', method: 'post' },
-        signOut: { path: 'auth/logout', method: 'post' },
-        getSession: { path: 'auth/session', method: 'get' },
+        signIn: { path: '/login', method: 'post' },
+        signOut: { path: '/logout', method: 'post' },
+        getSession: { path: '/session', method: 'get' },
         signUp: false,
         // getSession: { path: '/user/current', method: 'get' },
       },
