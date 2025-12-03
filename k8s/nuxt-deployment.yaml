@@ -24,6 +24,8 @@ spec:
         env:
         - name: AUTH_ORIGIN
           value: "https://api.jakobolason.dk/api"
+        - name: NUXT_PUBLIC_AUTH_BASE
+          value: "https://api.jakobolason.dk/api"
         # For SSR calls to backend (server-side)
         # - name: NUXT_PUBLIC_API_BASE
           # value: "http://axum-app:8086"

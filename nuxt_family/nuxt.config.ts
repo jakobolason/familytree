@@ -18,10 +18,17 @@ export default defineNuxtConfig({
     "/": { prerender: true },
   },
 
+  runtimeConfig: {
+    public: {
+      authBase: ''
+    }
+  },
+
   auth: {
     isEnabled: true,
     disableServerSideAuth: false,
     originEnvKey: 'AUTH_ORIGIN',
+    // baseUrl: process.env.AUTH_ORIGIN,
     // baseURL: 'http://localhost:8086/api',
     globalAppMiddleware: true,
     provider: {
