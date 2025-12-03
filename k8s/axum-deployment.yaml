@@ -23,7 +23,7 @@ spec:
           name: http
         env:
         - name: LOCO_ENV
-          value: development 
+          value: production 
         # - name: DB_USER
         #   valueFrom:
         #     secretKeyRef:
@@ -41,7 +41,7 @@ spec:
         - name: RUST_LOG
           value: "info"
         - name: AUTH_SECRET
-          value: "some-super-secret-key-change-later-dumbo"
+          value: "sEAXxpRkMqPx/ObGro/gfvXqAI6wAen9IUEHU6+IjYc="
         resources:
           requests:
             memory: "128Mi"
