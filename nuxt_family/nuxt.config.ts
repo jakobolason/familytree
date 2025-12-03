@@ -29,6 +29,7 @@ export default defineNuxtConfig({
       endpoints: {
         signIn: { path: 'auth/login', method: 'post' },
         signOut: { path: 'auth/logout', method: 'post' },
+        getSession: { path: 'auth/session', method: 'get' },
         signUp: false,
         // getSession: { path: '/user/current', method: 'get' },
       },

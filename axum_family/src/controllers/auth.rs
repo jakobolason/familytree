@@ -27,6 +27,20 @@ impl LoginResponse {
     }
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct SessionResponse {
+    pub pid: String,
+    pub name: String,
+}
+impl SessionResponse {
+    pub fn new(user: &user::Model) -> Self {
+        Self {
+            pid: user.pid.to_string(),
+            name: user.name.clone(),
+        }
+    }
+}
+
 async fn login(
     State(ctx): State<AppContext>,
     Json(params): Json<PasswordLoginParams>,
@@ -53,16 +67,32 @@ async fn login(
             params.email.to_string(),
             Default::default(),
         )
-        .unwrap();
+        .map_err(|e| {
+            tracing::error!("JWT generation error: {:?}", e);
+            loco_rs::Error::InternalServerError
+        })?;
 
     // Login success
     format::json(LoginResponse::new(&user, &token))
 }
 
+async fn get_session(State(ctx): State<AppContext>, auth: auth::JWT) -> Result<Response> {
+    let user = user::Entity::find()
+        .filter(user::Column::Email.eq(&auth.claims.pid))
+        .one(&ctx.db)
+        .await?;
+    if let Some(user) = user {
+        format::json(SessionResponse::new(&user))
+    } else {
+        tracing::error!("Error in validing token {:?}", &auth.claims);
+        unauthorized("Unauthorized session")
+    }
+}
 pub fn routes() -> Routes {
     Routes::new()
         // Authentication route prefix
         .prefix("auth")
         // Handling login with password
         .add("/login", post(login))
+        .add("/session", get(get_session))
 }

@@ -50,6 +50,7 @@ server:
       # Set the value of the [`Access-Control-Allow-Origin`][mdn] header
       allow_origins:
         - http://localhost:8085
+        - http://localhost:3000
         - https://tree.jakobolason.dk
         - https://www.tree.jakobolason.dk
         - https://jakobolason.dk
