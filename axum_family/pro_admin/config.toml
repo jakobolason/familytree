@@ -18,3 +18,4 @@ raw_table = { title = "Raw Tables" }
 # Title of "Composite Tables" in the menu
 composite_table = { title = "Composite Tables" }
 
+
