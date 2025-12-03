@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    baseURL: '/api/auth',
     public: {
       baseURL: '/api/auth'
     }
