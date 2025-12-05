@@ -1,1 +1,5 @@
 axum_family/.env
+/target
+Wistoft familien.xls
+family_graph.svg
+.env
