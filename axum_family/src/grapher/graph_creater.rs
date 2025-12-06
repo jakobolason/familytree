@@ -1,14 +1,18 @@
-use calamine::{Data, DataType, Reader, Xls, open_workbook};
+use calamine::{open_workbook, Data, DataType, Reader, Xls};
 use graphviz_rust::{
     cmd::{CommandArg, Format},
     exec, parse,
 };
-use petgraph::dot::Dot;
 use petgraph::graph::NodeIndex;
+use petgraph::{dot::Dot, visit::EdgeRef};
 use petgraph::{Directed, Direction, Graph};
-use std::fmt::Formatter;
-use std::path::Path;
-use std::{env, fmt};
+use std::{
+    env,
+    fmt::{self, Formatter},
+    fs::File,
+    io::Write,
+    path::Path,
+};
 
 #[derive(Debug)]
 struct Person {
@@ -25,16 +29,8 @@ struct Person {
 
 impl Person {
     fn new(info: Vec<String>, generation: i8) -> Result<Self, &'static str> {
-        let [
-            name,
-            birthdate,
-            last_name,
-            address,
-            city,
-            landline,
-            mobile_number,
-            email,
-        ]: [String; 8] = info.try_into().map_err(|_| "Expected exactly 8 elements")?;
+        let [name, birthdate, last_name, address, city, landline, mobile_number, email]: [String;
+            8] = info.try_into().map_err(|_| "Expected exactly 8 elements")?;
         let new_name = format!("{}, {}", name, generation);
 
         Ok(Person {
@@ -312,7 +308,58 @@ fn create_dotviz(family: &FamilyGraph) -> std::io::Result<()> {
     Ok(())
 }
 
-pub fn run(path: &Path) -> std::io::Result<()> {
+// Setup for making d3 json object
+#[derive(serde::Serialize)]
+struct D3Node {
+    name: String,
+    _children: Option<()>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    children: Vec<D3Node>,
+}
+
+fn build_subtree(graph: &FamilyGraph, node_idx: NodeIndex) -> D3Node {
+    let children: Vec<D3Node> = graph
+        .edges_directed(node_idx, Direction::Outgoing)
+        .filter(|edge| matches!(edge.weight(), Relationship::Child))
+        .map(|edge| {
+            let child_idx = edge.target();
+            build_subtree(graph, child_idx)
+        })
+        .collect();
+    D3Node {
+        name: graph[node_idx].name.clone(),
+        _children: None,
+        children,
+    }
+}
+
+fn create_3d_export(family: &FamilyGraph) -> std::io::Result<()> {
+    let roots: Vec<NodeIndex> = family
+        .node_indices()
+        .filter(|&node_idx| {
+            !family
+                .edges_directed(node_idx, Direction::Incoming)
+                .any(|edge| matches!(edge.weight(), Relationship::Child))
+        })
+        .collect();
+
+    let mut tree_data: Vec<D3Node> = Vec::new();
+
+    for root_idx in roots {
+        let node_tree = build_subtree(family, root_idx);
+        tree_data.push(node_tree);
+    }
+    let json_string =
+        serde_json::to_string_pretty(&tree_data).expect("Failed to serialize tree data to JSON");
+    let js_content = format!("export const familytreeData = {};", json_string);
+    let mut file = File::create("family_data.js")?;
+    file.write_all(js_content.as_bytes())?;
+    println!("D3 data generated successfully: family_data.js");
+
+    Ok(())
+}
+
+pub fn run_grapher(path: &Path) -> std::io::Result<()> {
     let mut workbook: Xls<_> = open_workbook(path).expect("Cannot open file");
 
     // Read the whole worksheet data and provide some statistics
@@ -335,6 +382,7 @@ pub fn run(path: &Path) -> std::io::Result<()> {
             Vec::new()
         }
     };
-    let family_graph = create_family(entries);
-    create_dotviz(&family_graph)
+    let family_graph: Graph<Person, Relationship> = create_family(entries);
+    create_dotviz(&family_graph);
+    create_3d_export(&family_graph)
 }

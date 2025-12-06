@@ -64,6 +64,7 @@ impl Hooks for App {
     fn register_tasks(tasks: &mut Tasks) {
         // Register all tasks
         tasks.register(tasks::seed::SeedData);
+        tasks.register(tasks::seed_graph::SeedTree);
     }
 
     async fn truncate(_ctx: &AppContext) -> Result<()> {
