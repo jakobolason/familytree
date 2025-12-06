@@ -28,3 +28,5 @@ seaography::register_entity_modules!([
     sales_order_detail,
     sales_order_header,
 ]);
+pub mod family_tree;
+pub mod medlem;

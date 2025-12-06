@@ -14,6 +14,15 @@ use std::{
     path::Path,
 };
 
+// Setup for making d3 json object
+#[derive(serde::Serialize)]
+pub struct D3Node {
+    pub name: String,
+    pub _children: Option<()>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub children: Vec<D3Node>,
+}
+
 #[derive(Debug)]
 struct Person {
     generation: i8,
@@ -306,15 +315,6 @@ fn create_dotviz(family: &FamilyGraph) -> std::io::Result<()> {
         }
     }
     Ok(())
-}
-
-// Setup for making d3 json object
-#[derive(serde::Serialize)]
-struct D3Node {
-    name: String,
-    _children: Option<()>,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    children: Vec<D3Node>,
 }
 
 fn build_subtree(graph: &FamilyGraph, node_idx: NodeIndex) -> D3Node {
