@@ -45,7 +45,7 @@
               class="text-xs font-medium cursor-pointer hover:fill-blue-600 hover:underline"
               @click.stop="openEditNode(node)"
             >
-              {{ node.data.name }}
+            {{ node.data.name }} {{node.data.last_name}}
             </text>
           </g>
         </TransitionGroup>

@@ -5,10 +5,10 @@ const { isOpen, nodeData, closeEditNode } = useEditNode();
 <template>
   <USlideover v-model:open="isOpen" title="Edit Node">
     <template #body>
-      <h1>Edit node</h1>
-      <!-- Access nodeData here if needed -->
+      <h1>Person oplysninger</h1>
       <pre>{{ nodeData }}</pre>
-      <LoginForm />
+      <!--<LoginForm /> -->
+      <p> Redigering af oplysninger kommer senere ... </p>
     </template>
   </USlideover>
 </template>

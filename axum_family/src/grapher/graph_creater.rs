@@ -14,37 +14,28 @@ use std::{
     path::Path,
 };
 
-// Setup for making d3 json object
-#[derive(serde::Serialize)]
-pub struct D3Node {
+#[derive(Debug, Clone, serde::Serialize)]
+pub struct Person {
+    pub generation: i8,
     pub name: String,
-    pub _children: Option<()>,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub children: Vec<D3Node>,
-}
-
-#[derive(Debug)]
-struct Person {
-    generation: i8,
-    name: String,
-    birthdate: String,
-    last_name: String,
-    address: String,
-    city: String,
-    landline: String,
-    mobile_number: String,
-    email: String,
+    pub birthdate: String,
+    pub last_name: String,
+    pub address: String,
+    pub city: String,
+    pub landline: String,
+    pub mobile_number: String,
+    pub email: String,
 }
 
 impl Person {
-    fn new(info: Vec<String>, generation: i8) -> Result<Self, &'static str> {
+    pub fn new(info: Vec<String>, generation: i8) -> Result<Self, &'static str> {
         let [name, birthdate, last_name, address, city, landline, mobile_number, email]: [String;
             8] = info.try_into().map_err(|_| "Expected exactly 8 elements")?;
-        let new_name = format!("{}, {}", name, generation);
+        // let new_name = format!("{}, {}", name, generation);
 
         Ok(Person {
             generation,
-            name: new_name,
+            name,
             birthdate,
             last_name,
             address,
@@ -54,26 +45,23 @@ impl Person {
             email,
         })
     }
-
-    fn default() -> Self {
-        Person {
-            generation: 0,
-            name: "insert_name".to_string(),
-            birthdate: "insert birthdate".to_string(),
-            last_name: "insert_lastname".to_string(),
-            address: "address here".to_string(),
-            city: "city here".to_string(),
-            landline: "landline here".to_string(),
-            mobile_number: "mobile number here".to_string(),
-            email: "email here".to_string(),
-        }
-    }
 }
 
 impl fmt::Display for Person {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self.name)
     }
+}
+
+// Setup for making d3 json object
+#[derive(Debug, serde::Serialize)]
+pub struct D3Node {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub _children: Option<Vec<D3Node>>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub children: Vec<D3Node>,
+    #[serde(flatten)]
+    pub person: Person,
 }
 
 #[derive(Debug, PartialEq)]
@@ -84,7 +72,6 @@ enum Relationship {
     Divorced,
     Dating,
     ChildFromPartner,
-    NotFound,
 }
 
 impl fmt::Display for Relationship {
@@ -96,7 +83,6 @@ impl fmt::Display for Relationship {
             Relationship::Divorced => write!(f, "Divorced"),
             Relationship::Dating => write!(f, "Kærester"),
             Relationship::ChildFromPartner => write!(f, "ChildFromPartner"),
-            Relationship::NotFound => write!(f, "NotFound"),
         }
     }
 }
@@ -275,7 +261,6 @@ fn create_dotviz(family: &FamilyGraph) -> std::io::Result<()> {
                     "style=dashed, color=orange, penwidth=2".to_owned()
                 }
                 Relationship::Relative => "style=dashed, color=gray, penwidth=1".to_owned(),
-                Relationship::NotFound => "style=dotted, color=lightgray, penwidth=1".to_owned(),
             }
         },
         // Node attribute getter
@@ -317,6 +302,7 @@ fn create_dotviz(family: &FamilyGraph) -> std::io::Result<()> {
     Ok(())
 }
 
+// This fn describes what information is taken from the edges.
 fn build_subtree(graph: &FamilyGraph, node_idx: NodeIndex) -> D3Node {
     let children: Vec<D3Node> = graph
         .edges_directed(node_idx, Direction::Outgoing)
@@ -327,9 +313,9 @@ fn build_subtree(graph: &FamilyGraph, node_idx: NodeIndex) -> D3Node {
         })
         .collect();
     D3Node {
-        name: graph[node_idx].name.clone(),
         _children: None,
         children,
+        person: graph[node_idx].clone(),
     }
 }
 

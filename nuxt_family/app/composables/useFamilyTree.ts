@@ -1,17 +1,20 @@
+import { tree } from "#build/ui";
 import * as d3 from "d3";
 // import { familyTreeData } from "./treeData";
 
 export const useFamilyTree = () => {
   // State
   // const rawData = ref(null);
+  const runtimeConfig = useRuntimeConfig();
   const nodes = ref([]);
   const links = ref([]);
 
-  const apiEndpoint = 'http://localhost:8086'
+  const apiEndpoint = runtimeConfig.public.apiEndpoint;
   const { data: treeData, status, error, refresh, clear } = useFetch(`${apiEndpoint}/api/user/tree`, {
     default: () => [],
     lazy: true,
   });
+  console.log('tree data: ', treeData.value);
   // Config
   const config = {
     width: 1000,
@@ -43,6 +46,7 @@ export const useFamilyTree = () => {
       console.warn("No tree data available");
       return;
     }
+    console.log('in calculate, treeData: ', treeData.value)
     const root = d3.hierarchy(treeData.value[0]);
 
     root.descendants().forEach((d) => {

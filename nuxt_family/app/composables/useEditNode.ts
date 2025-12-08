@@ -3,7 +3,8 @@ export const useEditNode = () => {
   const nodeData = useState("editNodeData", () => null);
 
   const openEditNode = (data?: any) => {
-    // nodeData.value = data;
+    nodeData.value = data.data;
+    console.log('data: ', data.data);
     isOpen.value = true;
   };
 

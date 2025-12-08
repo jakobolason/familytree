@@ -45,7 +45,7 @@ async fn login(
     State(ctx): State<AppContext>,
     Json(params): Json<PasswordLoginParams>,
 ) -> Result<Response> {
-    // Find user by email
+    // Find user by email, could be moved to models/user.rs
     let user = user::Entity::find()
         .filter(user::Column::Email.eq(&params.email))
         .one(&ctx.db)
@@ -88,6 +88,7 @@ async fn get_session(State(ctx): State<AppContext>, auth: auth::JWT) -> Result<R
         unauthorized("Unauthorized session")
     }
 }
+
 pub fn routes() -> Routes {
     Routes::new()
         // Authentication route prefix

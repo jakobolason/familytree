@@ -21,7 +21,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     baseURL: '/api/auth',
     public: {
-      baseURL: '/api/auth'
+      baseURL: '/api/auth',
+      apiEndpoint: process.env.AUTH_ORIGIN || 'http://localhost:8086'
     }
   },
 
