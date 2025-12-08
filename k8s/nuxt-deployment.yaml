@@ -26,7 +26,7 @@ spec:
         - name: AUTH_ORIGIN
           value: "https://api.jakobolason.dk"
         - name: NUXT_PUBLIC_API_ENDPOINT
-          value: "http://axum-app:8086"
+          value: "https://api.jakobolason.dk"
         - name: NUXT_AUTH_ORIGIN
           value: "http://axum-app:8086"
         # - name: NUXT_PUBLIC_AUTH_BASE

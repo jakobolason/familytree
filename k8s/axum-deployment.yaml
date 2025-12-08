@@ -22,7 +22,7 @@ spec:
         - containerPort: 8086
           name: http
         env:
-        - name: LOCO_ENV
+        - name: LOCO_ENV # development, production, server_development
           value: production 
         # - name: DB_USER
         #   valueFrom:
@@ -53,15 +53,15 @@ spec:
           httpGet:
             path: /_health
             port: 8086
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          initialDelaySeconds: 15
+          periodSeconds: 5
           failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /_health
             port: 8086
           initialDelaySeconds: 10
-          periodSeconds: 5
+          periodSeconds: 3
           failureThreshold: 3
 
 ---
