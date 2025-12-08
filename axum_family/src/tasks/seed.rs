@@ -68,21 +68,6 @@ impl Task for SeedData {
             };
         }
 
-        // Seed each table in sequence
-        seed_table_win_1252!(customer, "Customer.tsv");
-        seed_table_win_1252!(address, "Address.tsv");
-        seed_table_win_1252!(customer_address, "CustomerAddress.tsv");
-        seed_table_win_1252!(sales_order_header, "SalesOrderHeader.tsv");
-        seed_table_win_1252!(product_category, "ProductCategory.tsv");
-        seed_table_utf_16_tilde!(product_model, "ProductModel.tsv");
-        seed_table_win_1252!(product, "Product.tsv");
-        seed_table_win_1252!(sales_order_detail, "SalesOrderDetail.tsv");
-        seed_table_utf_16!(product_description, "ProductDescription.tsv");
-        seed_table_win_1252!(
-            product_model_product_description,
-            "ProductModelProductDescription.tsv"
-        );
-
         println!("All Tables Completed Seeding!");
         // End: Scaffold //
 

@@ -1,4 +1,4 @@
-use crate::models::user;
+use crate::models::_entities::user;
 use loco_rs::{auth::jwt, hash, prelude::*};
 use serde::{Deserialize, Serialize};
 

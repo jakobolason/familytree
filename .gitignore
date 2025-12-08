@@ -3,3 +3,4 @@ axum_family/.env
 Wistoft familien.xls
 family_graph.svg
 .env
+axum_family/family_data.js

@@ -13,7 +13,7 @@ use loco_rs::{
 };
 use migration::Migrator;
 
-use crate::{controllers, initializers, tasks};
+use crate::{controllers, models::family_tree, tasks};
 
 pub struct App;
 #[async_trait]
@@ -39,13 +39,13 @@ impl Hooks for App {
     ) -> Result<BootResult> {
         create_app::<Self, Migrator>(mode, environment, config).await
     }
-
-    async fn initializers(_ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
-        let initializers: Vec<Box<dyn Initializer>> =
-            vec![Box::new(initializers::graphql::GraphQLInitializer)];
-
-        Ok(initializers)
-    }
+    //
+    // async fn initializers(_ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
+    //     let initializers: Vec<Box<dyn Initializer>> =
+    //         vec![Box::new(initializers::graphql::GraphQLInitializer)];
+    //
+    //     Ok(initializers)
+    // }
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
         // Register all routes
@@ -53,10 +53,14 @@ impl Hooks for App {
             .prefix("/api")
             .add_route(controllers::auth::routes())
             .add_route(controllers::user::routes())
-            .add_route(controllers::graphql::routes())
             .add_route(controllers::admin::routes())
     }
 
+    // async fn after_routes(router: axum::Router, _ctx: &AppContext) -> Result<axum::Router> {
+    //     println!("Retriving latest family graph...");
+    //     let tree = FamilyTree::retrieve_latest().await?;
+    // }
+    //
     async fn connect_workers(_ctx: &AppContext, _queue: &Queue) -> Result<()> {
         Ok(())
     }

@@ -3929,6 +3929,7 @@ dependencies = [
  "graphviz-rust",
  "loco-rs",
  "migration",
+ "once_cell",
  "petgraph",
  "sea-orm",
  "sea-orm-pro",

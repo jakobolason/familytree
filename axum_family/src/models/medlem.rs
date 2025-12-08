@@ -1,5 +1,5 @@
+pub use super::_entities::medlem::{ActiveModel, Entity, Model};
 use sea_orm::entity::prelude::*;
-pub use super::_entities::medlem::{ActiveModel, Model, Entity};
 pub type Medlem = Entity;
 
 #[async_trait::async_trait]

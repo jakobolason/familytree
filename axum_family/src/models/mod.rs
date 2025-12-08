@@ -2,31 +2,8 @@
 
 mod utils;
 
-pub mod prelude;
-
-pub mod address;
-pub mod customer;
-pub mod customer_address;
-pub mod product;
-pub mod product_category;
-pub mod product_description;
-pub mod product_model;
-pub mod product_model_product_description;
-pub mod sales_order_detail;
-pub mod sales_order_header;
 pub mod user;
 
-seaography::register_entity_modules!([
-    address,
-    customer,
-    customer_address,
-    product,
-    product_category,
-    product_description,
-    product_model,
-    product_model_product_description,
-    sales_order_detail,
-    sales_order_header,
-]);
+pub mod _entities;
 pub mod family_tree;
 pub mod medlem;

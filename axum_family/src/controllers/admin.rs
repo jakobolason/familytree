@@ -1,16 +1,12 @@
 use loco_rs::{environment::Environment, prelude::*};
 use migration::{IntoColumnRef, IntoIden};
 use sea_orm::{
-    prelude::DateTime,
-    sea_query::{Alias, Asterisk, Expr, Func},
-    DatabaseBackend, DbConn, DeriveColumn, EnumIter, ExprTrait, FromQueryResult, QueryOrder,
-    QuerySelect,
+    sea_query::{Alias, Expr, Func},
+    DatabaseBackend, DbConn, DeriveColumn, EnumIter, FromQueryResult,
 };
 use sea_orm_pro::{ConfigParser, JsonCfg};
 use seaography::lazy_static;
 use serde::{Deserialize, Serialize};
-
-use crate::models::{customer, product, product_category, sales_order_detail, sales_order_header};
 
 const CONFIG_ROOT: &str = "pro_admin";
 
@@ -48,108 +44,6 @@ pub struct Datum {
 pub enum DatumColumn {
     Key,
     Val,
-}
-
-pub async fn dashboard(
-    _auth: auth::JWT,
-    State(ctx): State<AppContext>,
-    Json(body): Json<DashboardBody>,
-) -> Result<Response> {
-    let db = &ctx.db;
-    let data = match body.graph.as_str() {
-        // Start: Scaffold //
-        "new_customer_by_month" => {
-            customer::Entity::find()
-                .select_only()
-                .column_as(
-                    cast_as_year_month(db, customer::Column::CreatedDate),
-                    DatumColumn::Key,
-                )
-                .column_as(
-                    Expr::expr(Func::cast_as(
-                        Func::count(Expr::col(Asterisk)),
-                        int_keyword(db),
-                    )),
-                    DatumColumn::Val,
-                )
-                .filter(customer::Column::CreatedDate.gte(body.from.unwrap()))
-                .filter(customer::Column::CreatedDate.lte(body.to.unwrap()))
-                .group_by(Expr::col(DatumColumn::Key))
-                .into_model::<Datum>()
-                .all(db)
-                .await?
-        }
-        "sales_value_by_day" => {
-            sales_order_detail::Entity::find()
-                .select_only()
-                .column_as(
-                    cast_as_day(
-                        db,
-                        (
-                            sales_order_header::Entity,
-                            sales_order_header::Column::OrderDate,
-                        ),
-                    ),
-                    DatumColumn::Key,
-                )
-                .column_as(
-                    Expr::expr(Func::cast_as(
-                        Func::sum(
-                            Expr::col(sales_order_detail::Column::UnitPrice)
-                                .mul(Expr::col(sales_order_detail::Column::OrderQty)),
-                        ),
-                        int_keyword(db),
-                    )),
-                    DatumColumn::Val,
-                )
-                .left_join(sales_order_header::Entity)
-                .filter(
-                    Expr::col((
-                        sales_order_header::Entity,
-                        sales_order_header::Column::OrderDate,
-                    ))
-                    .gte(body.from.unwrap()),
-                )
-                .filter(
-                    Expr::col((
-                        sales_order_header::Entity,
-                        sales_order_header::Column::OrderDate,
-                    ))
-                    .lte(body.to.unwrap()),
-                )
-                .group_by(Expr::col(DatumColumn::Key))
-                .into_model::<Datum>()
-                .all(db)
-                .await?
-        }
-        "product_by_product_category" => {
-            product_category::Entity::find()
-                .select_only()
-                .column_as(
-                    Expr::expr(Expr::col((
-                        product_category::Entity,
-                        product_category::Column::Name,
-                    ))),
-                    DatumColumn::Key,
-                )
-                .column_as(
-                    Expr::expr(Func::cast_as(
-                        Func::count(Expr::col(Asterisk)),
-                        int_keyword(db),
-                    )),
-                    DatumColumn::Val,
-                )
-                .left_join(product::Entity)
-                .group_by(Expr::col(DatumColumn::Key))
-                .order_by_desc(Expr::col(DatumColumn::Val))
-                .into_model::<Datum>()
-                .all(db)
-                .await?
-        }
-        // End: Scaffold //
-        _ => not_found()?,
-    };
-    format::json(data)
 }
 
 fn cast_as_year_month(db: &DbConn, col: impl IntoColumnRef) -> Expr {
@@ -199,6 +93,5 @@ pub fn routes() -> Routes {
         .prefix("admin")
         // Fetch web config
         .add("/config", get(config))
-        // Fetch dashboard graph data
-        .add("/dashboard", post(dashboard))
+    // Fetch dashboard graph data
 }
