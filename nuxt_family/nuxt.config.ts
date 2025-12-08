@@ -20,9 +20,11 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     baseURL: '/api/auth',
+    apiEndpoint: process.env.AUTH_ORIGIN,
+    authOrigin: process.env.AUTH_ORIGIN,
     public: {
       baseURL: '/api/auth',
-      apiEndpoint: process.env.AUTH_ORIGIN || 'http://localhost:8086'
+      apiEndpoint: process.env.AUTH_ORIGIN
     }
   },
 

@@ -22,16 +22,21 @@ spec:
         - containerPort: 3000
           name: http
         env:
+        # Used by the user
         - name: AUTH_ORIGIN
           value: "https://api.jakobolason.dk"
-        - name: NUXT_PUBLIC_AUTH_BASE
-          value: "https://api.jakobolason.dk"
+        - name: NUXT_PUBLIC_API_ENDPOINT
+          value: "http://axum-app:8086"
+        - name: NUXT_AUTH_ORIGIN
+          value: "http://axum-app:8086"
+        # - name: NUXT_PUBLIC_AUTH_BASE
+        #   value: "https://api.jakobolason.dk"
         - name: NUXT_PUBLIC_AUTH_ORIGN
           value: "https://api.jakobolason.dk"
         - name: NUXT_PUBLIC_AUTH_BASE_URL
           value: "https://api.jakobolason.dk"
-        - name: NITRO_ROUTE_RULES
-          value: '{"/api/**": {"proxy": "http://axum-app:8086/api/**"}}'
+        # - name: NITRO_ROUTE_RULES
+        #   value: '{"/api/**": {"proxy": "http://axum-app:8086/api/**"}}'
         # For SSR calls to backend (server-side)
         # - name: NUXT_PUBLIC_API_BASE
           # value: "http://axum-app:8086"

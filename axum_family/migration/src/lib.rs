@@ -6,7 +6,6 @@
 pub use sea_orm_migration::prelude::*;
 
 mod m20250101_000001_user;
-mod m20250101_000002_seed_users;
 mod m20251204_184527_medlem;
 mod m20251206_174904_family_tree;
 
@@ -17,10 +16,8 @@ impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
             Box::new(m20250101_000001_user::Migration),
-            Box::new(m20250101_000002_seed_users::Migration),
             Box::new(m20251204_184527_medlem::Migration),
             Box::new(m20251206_174904_family_tree::Migration),
         ]
     }
 }
-
