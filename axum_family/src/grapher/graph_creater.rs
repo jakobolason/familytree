@@ -333,7 +333,7 @@ fn build_subtree(graph: &FamilyGraph, node_idx: NodeIndex) -> D3Node {
     }
 }
 
-fn create_3d_export(family: &FamilyGraph) -> std::io::Result<()> {
+fn create_3d_export(family: &FamilyGraph) -> std::io::Result<Vec<D3Node>> {
     let roots: Vec<NodeIndex> = family
         .node_indices()
         .filter(|&node_idx| {
@@ -356,10 +356,10 @@ fn create_3d_export(family: &FamilyGraph) -> std::io::Result<()> {
     file.write_all(js_content.as_bytes())?;
     println!("D3 data generated successfully: family_data.js");
 
-    Ok(())
+    Ok(tree_data)
 }
 
-pub fn run_grapher(path: &Path) -> std::io::Result<()> {
+pub fn run_grapher(path: &Path) -> std::io::Result<Vec<D3Node>> {
     let mut workbook: Xls<_> = open_workbook(path).expect("Cannot open file");
 
     // Read the whole worksheet data and provide some statistics
@@ -383,6 +383,6 @@ pub fn run_grapher(path: &Path) -> std::io::Result<()> {
         }
     };
     let family_graph: Graph<Person, Relationship> = create_family(entries);
-    create_dotviz(&family_graph);
+    create_dotviz(&family_graph)?;
     create_3d_export(&family_graph)
 }

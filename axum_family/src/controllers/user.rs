@@ -1,3 +1,4 @@
+use crate::models::family_tree::FAMILY_TREE_CACHE;
 use loco_rs::prelude::*;
 
 async fn current(auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Response> {
@@ -9,10 +10,22 @@ async fn current(auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Resp
     }))
 }
 
+async fn get_tree() -> Result<Response> {
+    if let Ok(cache) = FAMILY_TREE_CACHE.read() {
+        if let Some(ref data) = *cache {
+            return format::json(serde_json::json!(data.clone()));
+        }
+    }
+    Err(loco_rs::Error::Message(
+        "Family tree data not available".to_string(),
+    ))
+}
+
 pub fn routes() -> Routes {
     Routes::new()
         // User route prefix
         .prefix("user")
+        .add("/tree", get(get_tree))
         // Fetch user profile
         .add("/current", get(current))
 }

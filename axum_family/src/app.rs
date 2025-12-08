@@ -13,7 +13,7 @@ use loco_rs::{
 };
 use migration::Migrator;
 
-use crate::{controllers, models::family_tree, tasks};
+use crate::{controllers, models::family_tree::FamilyTree, tasks};
 
 pub struct App;
 #[async_trait]
@@ -39,12 +39,21 @@ impl Hooks for App {
     ) -> Result<BootResult> {
         create_app::<Self, Migrator>(mode, environment, config).await
     }
-    //
-    // async fn initializers(_ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
-    //     let initializers: Vec<Box<dyn Initializer>> =
-    //         vec![Box::new(initializers::graphql::GraphQLInitializer)];
-    //
-    //     Ok(initializers)
+
+    // async fn initializers(
+    //     router: axum::Router,
+    //     _ctx: &AppContext,
+    // ) -> Result<axum::Router> {
+    //     println!("Loading family tree cache from database...");
+    //     if let Err(e) = FamilyTree::load_cache_from_db(&_ctx.db).await {
+    //         eprintln!(
+    //             "Warning: Failed to load family tree cache from database: {}",
+    //             e
+    //         );
+    //     } else {
+    //         println!("Family tree cache loaded from database.");
+    //     }
+    //     Ok(router)
     // }
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
@@ -56,11 +65,19 @@ impl Hooks for App {
             .add_route(controllers::admin::routes())
     }
 
-    // async fn after_routes(router: axum::Router, _ctx: &AppContext) -> Result<axum::Router> {
-    //     println!("Retriving latest family graph...");
-    //     let tree = FamilyTree::retrieve_latest().await?;
-    // }
-    //
+    async fn after_routes(router: axum::Router, _ctx: &AppContext) -> Result<axum::Router> {
+        println!("Retriving latest family graph...");
+        if let Err(e) = FamilyTree::load_cache_from_db(&_ctx.db).await {
+            eprintln!(
+                "Warning: Failed to load family tree cache from database: {}",
+                e
+            );
+        } else {
+            println!("Family tree cache loaded from database.");
+        }
+        Ok(router)
+    }
+
     async fn connect_workers(_ctx: &AppContext, _queue: &Queue) -> Result<()> {
         Ok(())
     }

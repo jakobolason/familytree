@@ -1,7 +1,10 @@
 use loco_rs::prelude::*;
 use std::path::Path;
 
-use crate::grapher::graph_creater::run_grapher;
+use crate::{
+    grapher::graph_creater::run_grapher,
+    models::family_tree::{ActiveModel as FamilyTreeActive, FamilyTree},
+};
 
 #[allow(clippy::module_name_repetitions)]
 pub struct SeedTree;
@@ -34,16 +37,21 @@ impl Task for SeedTree {
             std::process::exit(1);
         }
 
-        match run_grapher(path) {
-            Ok(_) => {
+        let tree_nodes = match run_grapher(path) {
+            Ok(nodes) => {
                 println!("Task Complete!");
                 println!("   File 'family_data.js' has been created.");
+                nodes
             }
             Err(e) => {
                 eprintln!("Error generating tree: {}", e);
                 std::process::exit(1);
             }
-        }
+        };
+        let json_value = serde_json::to_value(&tree_nodes)?;
+        FamilyTreeActive::create_snapshot(&app_context.db, json_value)
+            .await
+            .map_err(|e| Error::Message(format!("JSON serialization error: {}", e)))?;
 
         println!("Tree generated successfully!");
 
