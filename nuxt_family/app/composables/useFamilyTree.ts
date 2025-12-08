@@ -1,16 +1,21 @@
 import * as d3 from "d3";
-import { familyTreeData } from "./treeData";
+// import { familyTreeData } from "./treeData";
 
 export const useFamilyTree = () => {
   // State
-  const rawData = ref(structuredClone(familyTreeData));
+  // const rawData = ref(null);
   const nodes = ref([]);
   const links = ref([]);
 
+  const apiEndpoint = 'http://localhost:8086'
+  const { data: treeData, status, error, refresh, clear } = useFetch(`${apiEndpoint}/api/user/tree`, {
+    default: () => [],
+    lazy: true,
+  });
   // Config
   const config = {
     width: 1000,
-    height: 600,
+    height: 2000,
     margin: { top: 50, right: 90, bottom: 50, left: 150 },
     nodeRadius: 10,
     duration: 400,
@@ -34,7 +39,11 @@ export const useFamilyTree = () => {
 
   // Calculate tree layout
   const calculateTreeLayout = () => {
-    const root = d3.hierarchy(rawData.value[0]);
+    if (!treeData.value || treeData.value.length === 0) {
+      console.warn("No tree data available");
+      return;
+    }
+    const root = d3.hierarchy(treeData.value[0]);
 
     root.descendants().forEach((d) => {
       if (!d.data.id) d.data.id = `gen-${nodeIdCounter++}`;
@@ -70,6 +79,10 @@ export const useFamilyTree = () => {
     d3.select(el).attr("transform", `translate(${y},${x})`);
   };
 
+  watch(treeData, () => {
+    calculateTreeLayout();
+  }, { immediate: true });
+
   const onNodeEnter = (el: Element, done: () => void) => {
     const dataset = (el as HTMLElement).dataset;
     d3.select(el)
@@ -88,7 +101,11 @@ export const useFamilyTree = () => {
   };
 
   return {
-    rawData,
+    treeData,
+    status,
+    error,
+    refresh,
+    clear,
     nodes,
     links,
     config,

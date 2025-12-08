@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full h-[600px] overflow-hidden font-sans">
+  <div> states: {{ status }}: , error: {{ error }} </div>
+  <div v-if="status === 'pending'">Loadfing tree .. </div>
+  <div v-else-if="error">ERROR: see above </div>
+  <div v-else class="w-full font-sans">
     <svg :width="config.width" :height="config.height">
       <g :transform="`translate(${config.margin.left},${config.margin.top})`">
         <!-- Links -->
@@ -54,6 +57,9 @@
 <script setup lang="ts">
 const { openEditNode } = useEditNode();
 const {
+  treeData,
+  status,
+  error,
   nodes,
   links,
   config,
@@ -63,9 +69,7 @@ const {
   onNodeLeave,
 } = useFamilyTree();
 
-onMounted(() => {
-  calculateTreeLayout();
-});
+
 </script>
 
 <style scoped>
