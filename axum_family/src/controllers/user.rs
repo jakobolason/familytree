@@ -10,8 +10,8 @@ async fn current(auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Resp
     }))
 }
 
-async fn get_tree() -> Result<Response> {
-    tracing::error!("UNGUARDED ACCESS TO FAMILY TREE DATA");
+async fn get_tree(_auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Response> {
+    // tracing::error!("UNGUARDED ACCESS TO FAMILY TREE DATA: {:?}", auth.claims);
     if let Ok(cache) = FAMILY_TREE_CACHE.read() {
         if let Some(ref data) = *cache {
             return format::json(serde_json::json!(data.clone()));
