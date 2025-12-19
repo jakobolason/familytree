@@ -9,11 +9,17 @@ export const useFamilyTree = () => {
   const nodes = ref([]);
   const links = ref([]);
 
+  const token = useCookie('auth.token');
+  const authHeader = computed(() => {
+    return token.value ? { Authorization: `Bearer ${token.value}` } : {};
+  })
   const apiEndpoint = runtimeConfig.public.apiEndpoint;
-  const { data: treeData, status, error, refresh, clear } = useFetch(`${apiEndpoint}/api/user/tree`, {
-    default: () => [],
-    lazy: true,
-  });
+  const { data: treeData, status, error, refresh, clear } =
+    useFetch(`${apiEndpoint}/api/user/tree`, {
+      default: () => [],
+      lazy: true,
+      headers: authHeader,
+    });
   console.log('tree data: ', treeData.value);
   // Config
   const config = {

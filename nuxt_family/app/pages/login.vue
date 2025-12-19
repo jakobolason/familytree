@@ -1,10 +1,7 @@
-<script setup lang="ts">
-  const { signIn } = useAuth()
-  const credentials = { email: 'admin@admin', password: "admin"}
-</script>
+
 <template>
-  <div>
-    <p> Log in here </p>
+  <div class="h-screen flex flex-col  items-center gap-4">
+    <p class="text-gray-500"> Log in</p>
     <LoginForm />
   </div>
 </template>

@@ -18,6 +18,10 @@ export default defineNuxtConfig({
     "/": { prerender: true },
   },
 
+  colorMode: {
+    preference: 'light'
+  },
+
   runtimeConfig: {
     baseURL: '/api/auth',
     apiEndpoint: process.env.AUTH_ORIGIN,
@@ -40,7 +44,7 @@ export default defineNuxtConfig({
       endpoints: {
         signIn: { path: 'api/auth/login', method: 'post' },
         signOut: { path: '/api/auth/logout', method: 'post' },
-        getSession: { path: '/api/auth/session', method: 'get' },
+        getSession: { path: '/api/user/current', method: 'get' },
         signUp: false,
         // getSession: { path: '/user/current', method: 'get' },
       },

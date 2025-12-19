@@ -1,5 +1,4 @@
 <template>
-  <div> states: {{ status }}: , error: {{ error }} </div>
   <div v-if="status === 'pending'">Loadfing tree .. </div>
   <div v-else-if="error">ERROR: see above </div>
   <div v-else class="w-full font-sans">
