@@ -1,11 +1,8 @@
 use loco_rs::{hash, prelude::*};
 use std::path::Path;
 
-use crate::{
-    grapher::graph_creater::{run_grapher, D3Node, Person},
-    models::_entities::user,
-    models::family_tree::{ActiveModel as FamilyTreeActive, FamilyTree},
-};
+use crate::{models::_entities::user, models::family_tree::ActiveModel as FamilyTreeActive};
+use family_graph::{family_graph::D3Node, family_graph::Person, run_grapher, CreateOptions};
 
 fn collect_people(node: &D3Node) -> Vec<Person> {
     let mut people = vec![node.person.clone()];
@@ -47,7 +44,7 @@ impl Task for SeedTree {
             std::process::exit(1);
         }
 
-        let tree_nodes = match run_grapher(path) {
+        let tree_nodes = match run_grapher(path, "Ark1", "family_data.js", CreateOptions::D3) {
             Ok(nodes) => {
                 println!("Task Complete!");
                 println!("   File 'family_data.js' has been created.");
