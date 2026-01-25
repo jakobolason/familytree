@@ -1,5 +1,3 @@
-use base64::{engine::general_purpose::STANDARD, Engine as _};
-use seaography::itertools::Itertools;
 use serde::Deserialize;
 
 pub fn bool_from_int<'de, D>(deserializer: D) -> Result<bool, D::Error>
@@ -49,31 +47,6 @@ where
                     },
                 )?;
             Ok(Some(date_time))
-        }
-        None => Ok(None),
-    }
-}
-
-pub fn opt_bytes_from_str<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    match Option::<String>::deserialize(deserializer)? {
-        Some(s) => {
-            let mut bytes = Vec::new();
-            for byte in &s.chars().chunks(2) {
-                let byte: String = byte.collect();
-                let b = u8::from_str_radix(&byte, 16).map_err(|_| {
-                    serde::de::Error::invalid_value(
-                        serde::de::Unexpected::Str(&byte),
-                        &"Base 16 Bytes",
-                    )
-                })?;
-                bytes.push(b);
-            }
-            let base64_encoded = STANDARD.encode(bytes);
-            let src = format!("data:image;base64,{base64_encoded}");
-            Ok(Some(src))
         }
         None => Ok(None),
     }

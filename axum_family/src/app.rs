@@ -3,10 +3,11 @@ use std::path::Path;
 use async_trait::async_trait;
 use loco_rs::{
     app::{AppContext, Hooks, Initializer},
-    bgworker::Queue,
+    bgworker::{BackgroundWorker, Queue},
     boot::{create_app, BootResult, StartMode},
     config::Config,
     controller::AppRoutes,
+    db::{self, truncate_table},
     environment::Environment,
     task::Tasks,
     Result,
@@ -62,7 +63,6 @@ impl Hooks for App {
             .prefix("/api")
             .add_route(controllers::auth::routes())
             .add_route(controllers::user::routes())
-            .add_route(controllers::admin::routes())
     }
 
     async fn after_routes(router: axum::Router, _ctx: &AppContext) -> Result<axum::Router> {
@@ -84,7 +84,6 @@ impl Hooks for App {
 
     fn register_tasks(tasks: &mut Tasks) {
         // Register all tasks
-        tasks.register(tasks::seed::SeedData);
         tasks.register(tasks::seed_graph::SeedTree);
         tasks.register(tasks::seed_user::SeedUser);
     }
