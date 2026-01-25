@@ -16,6 +16,10 @@ impl MigrationTrait for Migration {
             .col(string(User::Password))
             .col(string(User::ApiKey).unique_key())
             .col(string(User::Name))
+            .col(string_null(User::ResetToken))
+            .col(date_time_null(User::ResetSentAt))
+            .col(string_null(User::MagicLinkToken))
+            .col(date_time_null(User::MagicLinkTokenExpiration))
             .to_owned();
         manager.create_table(table).await?;
         Ok(())
@@ -39,4 +43,8 @@ pub enum User {
     Name,
     Password,
     ApiKey,
+    ResetToken,
+    ResetSentAt,
+    MagicLinkToken,
+    MagicLinkTokenExpiration,
 }
