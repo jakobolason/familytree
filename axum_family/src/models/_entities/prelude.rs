@@ -2,4 +2,5 @@
 
 pub use super::family_tree::Entity as FamilyTree;
 pub use super::medlem::Entity as Medlem;
+pub use super::medlem_editors::Entity as MedlemEditors;
 pub use super::user::Entity as User;

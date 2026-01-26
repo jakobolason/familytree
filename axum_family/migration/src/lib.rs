@@ -9,6 +9,7 @@ mod m20250101_000001_user;
 mod m20251204_184527_medlem;
 mod m20251206_174904_family_tree;
 
+mod m20260126_171821_create_medlem_editors;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -18,6 +19,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250101_000001_user::Migration),
             Box::new(m20251204_184527_medlem::Migration),
             Box::new(m20251206_174904_family_tree::Migration),
+            Box::new(m20260126_171821_create_medlem_editors::Migration),
         ]
     }
 }

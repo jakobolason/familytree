@@ -19,24 +19,7 @@ pub struct FamilyTreeNode {
     children: Vec<FamilyTreeNode>,
 }
 
-fn collect_people(node: &D3Node) -> Vec<Person> {
-    // TODO: Children should only be the immediate children, not grand etc.
-    let mut people = vec![node.person.clone()];
-
-    for child in &node.children {
-        people.extend(collect_people(child));
-    }
-    people
-}
-
 impl FamilyTreeNode {
-    pub fn new(name: &str) -> Self {
-        FamilyTreeNode {
-            name: name.to_string(),
-            pid: None,
-            children: Vec::new(),
-        }
-    }
     fn create_d3_tree(node: &D3Node, medlem_pids: &HashMap<String, Uuid>) -> Self {
         let full_name = format!("{} {}", node.person.name, node.person.last_name);
         Self {
@@ -51,6 +34,15 @@ impl FamilyTreeNode {
     }
 }
 
+fn collect_people(node: &D3Node) -> Vec<Person> {
+    // TODO: Children should only be the immediate children, not grand etc.
+    let mut people = vec![node.person.clone()];
+
+    for child in &node.children {
+        people.extend(collect_people(child));
+    }
+    people
+}
 #[allow(clippy::module_name_repetitions)]
 pub struct SeedTree;
 #[async_trait]

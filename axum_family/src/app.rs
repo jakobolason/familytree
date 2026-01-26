@@ -64,6 +64,7 @@ impl Hooks for App {
             .add_route(controllers::user::routes())
             .add_route(controllers::magic_link::routes())
             .add_route(controllers::reset::routes())
+            .add_route(controllers::medlem::routes())
     }
 
     async fn after_routes(router: axum::Router, _ctx: &AppContext) -> Result<axum::Router> {

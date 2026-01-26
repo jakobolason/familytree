@@ -4,4 +4,5 @@ pub mod prelude;
 
 pub mod family_tree;
 pub mod medlem;
+pub mod medlem_editors;
 pub mod user;

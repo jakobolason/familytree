@@ -1,6 +1,7 @@
 /// This denotes what controllers are inserted
 pub mod auth;
 pub mod magic_link;
+pub mod medlem;
 pub mod reset;
 pub mod user;
 
