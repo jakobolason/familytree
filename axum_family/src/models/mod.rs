@@ -1,5 +1,3 @@
-mod utils;
-
 pub mod user;
 
 pub mod _entities;

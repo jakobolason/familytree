@@ -45,6 +45,17 @@ impl Authenticable for Model {
 }
 
 impl Model {
+    pub async fn find_by_full_name(db: &DatabaseConnection, name: &str) -> ModelResult<Self> {
+        let user = user::Entity::find()
+            .filter(
+                model::query::condition()
+                    .eq(user::Column::Name, name)
+                    .build(),
+            )
+            .one(db)
+            .await?;
+        user.ok_or_else(|| ModelError::EntityNotFound)
+    }
     /// Finds a user by provided email
     ///
     /// # Errors
