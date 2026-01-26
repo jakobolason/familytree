@@ -71,14 +71,7 @@ server:
       max_age: 86400
     fallback:
       enable: false
-    static:
-      enable: true
-      must_exist: true
-      precompressed: true
-      folder:
-        uri: /
-        path: assets
-      fallback: assets/admin/index.html
+    
 
 mailer:
   # SMTP mailer configuration.
@@ -103,7 +96,8 @@ workers:
 # Database Configuration
 database:
   # Database connection URI
-  uri: {{ get_env(name="DATABASE_URL") }}
+  uri: "postgresql://dev:devpassword@localhost:5432/myapp"
+  # {{ get_env(name="DATABASE_URL") }}
   # When enabled, the sql query will be logged.
   enable_logging: true
   # Set the timeout duration when acquiring a connection.

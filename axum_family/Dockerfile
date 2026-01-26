@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/
 COPY --from=build /app/target/release/familytree-server-cli /app
 COPY config /app/config
 COPY pro_admin /app/pro_admin
-COPY assets /app/assets
+#COPY assets /app/assets
 
 EXPOSE 8086
 

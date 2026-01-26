@@ -1,45 +1,8 @@
-use crate::models::_entities::user;
+use crate::{
+    models::_entities::user,
+    views::auth::{LoginResponse, PasswordLoginParams, SessionResponse},
+};
 use loco_rs::{auth::jwt, hash, prelude::*};
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct PasswordLoginParams {
-    pub email: String,
-    pub password: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct LoginResponse {
-    pub token: String,
-    pub pid: String,
-    pub name: String,
-    pub is_verified: bool,
-}
-
-impl LoginResponse {
-    pub fn new(user: &user::Model, token: &String) -> Self {
-        Self {
-            token: token.to_string(),
-            pid: user.pid.to_string(),
-            name: user.name.clone(),
-            is_verified: true,
-        }
-    }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct SessionResponse {
-    pub pid: String,
-    pub name: String,
-}
-impl SessionResponse {
-    pub fn new(user: &user::Model) -> Self {
-        Self {
-            pid: user.pid.to_string(),
-            name: user.name.clone(),
-        }
-    }
-}
 
 async fn login(
     State(ctx): State<AppContext>,

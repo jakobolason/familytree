@@ -63,6 +63,8 @@ impl Hooks for App {
             .prefix("/api")
             .add_route(controllers::auth::routes())
             .add_route(controllers::user::routes())
+            .add_route(controllers::magic_link::routes())
+            .add_route(controllers::reset::routes())
     }
 
     async fn after_routes(router: axum::Router, _ctx: &AppContext) -> Result<axum::Router> {

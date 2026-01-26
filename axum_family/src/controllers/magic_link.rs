@@ -1,0 +1,87 @@
+use crate::{
+    mailers::auth::AuthMailer,
+    models::{
+        _entities::user,
+        // user::{LoginParams, RegisterParams},
+    },
+    views::auth::LoginResponse,
+};
+use loco_rs::prelude::*;
+use serde::{Deserialize, Serialize};
+use validator as val;
+
+#[derive(Debug, Deserialize, val::Validate, Serialize)]
+pub struct MagicLinkParams {
+    #[validate(email)]
+    pub email: String,
+}
+
+/// Magic link authentication provides a secure and passwordless way to log in to the application.
+///
+/// # Flow
+/// 1. **Request a Magic Link**:
+///    A registered user sends a POST request to `/magic-link` with their email.
+///    If the email exists, a short-lived, one-time-use token is generated and sent to the user's email.
+///    For security and to avoid exposing whether an email exists, the response always returns 200, even
+///    if the email is invalid.
+///
+/// 2. **Click the Magic Link**:
+///    The user clicks the link (/magic-link/{token}), which validates the token and its expiration.
+///    If valid, the server generates a JWT and responds with a [`LoginResponse`].
+///    If invalid or expired, an unauthorized response is returned.
+///
+/// This flow enhances security by avoiding traditional passwords and providing a seamless login experience.
+async fn magic_link(
+    State(ctx): State<AppContext>,
+    Json(params): Json<MagicLinkParams>,
+) -> Result<Response> {
+    if let Err(e) = val::Validate::validate(&params) {
+        tracing::debug!(
+            email = params.email,
+            "The provided email is invalid or does not match the allowed domains: {:?}",
+            e
+        );
+        return bad_request("invalid request");
+    }
+
+    let Ok(user) = user::Model::find_by_email(&ctx.db, &params.email).await else {
+        // we don't want to expose our user email. if the email is invalid we still
+        // returning success to the caller
+        tracing::debug!(email = params.email, "user not found by email");
+        return format::empty_json();
+    };
+
+    let user = user.into_active_model().create_magic_link(&ctx.db).await?;
+    AuthMailer::send_magic_link(&ctx, &user).await?;
+
+    format::empty_json()
+}
+
+/// Verifies a magic link token and authenticates the user.
+async fn magic_link_verify(
+    Path(token): Path<String>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let Ok(user) = user::Model::find_by_magic_token(&ctx.db, &token).await else {
+        // we don't want to expose our user email. if the email is invalid we still
+        // returning success to the caller
+        return unauthorized("unauthorized!");
+    };
+
+    let user = user.into_active_model().clear_magic_link(&ctx.db).await?;
+
+    let jwt_secret = ctx.config.get_jwt_config()?;
+
+    let token = user
+        .generate_jwt(&jwt_secret.secret, jwt_secret.expiration)
+        .or_else(|_| unauthorized("unauthorized!"))?;
+
+    format::json(LoginResponse::new(&user, &token))
+}
+
+pub fn routes() -> Routes {
+    Routes::new()
+        .prefix("magic-link")
+        .add("/", post(magic_link))
+        .add("/{token}", get(magic_link_verify))
+}

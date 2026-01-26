@@ -1,1 +1,1 @@
-Magic link example
+Magic link login 

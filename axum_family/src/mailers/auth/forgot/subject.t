@@ -1,1 +1,1 @@
-Your reset password link
+Link til at ændre adgangskode

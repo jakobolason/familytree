@@ -76,15 +76,7 @@ server:
       max_age: 86400
     fallback:
       enable: false
-    static:
-      # i don't want the frontend in prod, only used for testing
-      enable: false 
-      must_exist: true
-      precompressed: true
-      folder:
-        uri: /
-        path: assets
-      fallback: assets/admin/index.html
+    
 
 # Mailer Configuration.
 mailer:

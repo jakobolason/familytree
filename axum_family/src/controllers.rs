@@ -1,4 +1,7 @@
+/// This denotes what controllers are inserted
 pub mod auth;
+pub mod magic_link;
+pub mod reset;
 pub mod user;
 
 // Response of web controller

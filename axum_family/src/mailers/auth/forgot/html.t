@@ -1,11 +1,11 @@
 ;<html>
 
 <body>
-  Hey {{name}},
-  Forgot your password? No worries! You can reset it by clicking the link below:
-  <a href="http://{{domain}}/reset#{{resetToken}}">Reset Your Password</a>
-  If you didn't request a password reset, please ignore this email.
-  Best regards,<br>The Loco Team</br>
-</body>
+  Hej {{name}},
+  Du har anmodet om at ændre din adgangskode, som du kan gøre ved det følgende links:
+  <a href="http://{{domain}}/reset#{{resetToken}}">Ændre adgangskode</a>
+  Hvis du ikke anmodede om dette, så kan du sikkort ignorere denne besked.
+  Med vanlig hilsen, <b> Jakob Olason </b>
+  </body>
 
 </html>
