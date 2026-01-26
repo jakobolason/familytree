@@ -2,14 +2,13 @@ use loco_rs::{
     app::AppContext,
     mailer::{self, Mailer},
     prelude::{include_dir, Dir},
-    schema::name,
     Error, Result,
 };
 use serde_json::json;
 
 use crate::models::user;
 
-static welcome: Dir<'_> = include_dir!("src/mailers/auth/welcome");
+//static welcome: Dir<'_> = include_dir!("src/mailers/auth/welcome");
 static FORGOT: Dir<'_> = include_dir!("src/mailers/auth/forgot");
 static MAGIC_LINK: Dir<'_> = include_dir!("src/mailers/auth/magic_link");
 
@@ -29,7 +28,7 @@ impl AuthMailer {
                 to: user.email.to_string(),
                 locals: json!({
                   "name": user.name,
-                  "verifyToken": user.reset_token,
+                  "resetToken": user.reset_token,
                   "domain": ctx.config.server.full_url()
                 }),
                 ..Default::default()

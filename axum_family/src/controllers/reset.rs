@@ -1,16 +1,11 @@
-use crate::{
-    mailers::auth::AuthMailer,
-    models::{
-        _entities::user,
-        // user::{LoginParams, RegisterParams},
-    },
-    // views::auth::{CurrentResponse, LoginResponse},
-};
+use crate::{mailers::auth::AuthMailer, models::_entities::user};
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
+use validator as val;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, val::Validate, Serialize)]
 pub struct ForgotParams {
+    #[validate(email)]
     pub email: String,
 }
 
@@ -29,6 +24,14 @@ async fn forgot(
     State(ctx): State<AppContext>,
     Json(params): Json<ForgotParams>,
 ) -> Result<Response> {
+    if let Err(e) = val::Validate::validate(&params) {
+        tracing::debug!(
+            email = params.email,
+            "The provided email is invalid or does not match the allowed domains: {:?}",
+            e
+        );
+        return bad_request("invalid request");
+    }
     let Ok(user) = user::Model::find_by_email(&ctx.db, &params.email).await else {
         // we don't want to expose our user email. if the email is invalid we still
         // returning success to the caller
@@ -66,7 +69,7 @@ pub fn routes() -> Routes {
     Routes::new()
         // User route prefix
         .prefix("reset")
-        .add("/", get(reset))
-        .add("/forgot", get(forgot))
+        .add("/", post(reset))
+        .add("/forgot", post(forgot))
     // Fetch user profile
 }
