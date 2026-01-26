@@ -1,16 +1,43 @@
+use crate::{models::_entities::user, models::family_tree::ActiveModel as FamilyTreeActive};
+use family_graph::{
+    create_d3_export,
+    family_graph::{D3Node, Person},
+    run_grapher, CreateOptions,
+};
 use loco_rs::{hash, prelude::*};
 use std::path::Path;
 
-use crate::{models::_entities::user, models::family_tree::ActiveModel as FamilyTreeActive};
-use family_graph::{family_graph::D3Node, family_graph::Person, run_grapher, CreateOptions};
+pub const RANDOM_PASSWD_LENGTH: i8 = 20;
+
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct FamilyTreeNode {
+    name: String,
+    children: Vec<FamilyTreeNode>,
+}
 
 fn collect_people(node: &D3Node) -> Vec<Person> {
+    // TODO: Children should only be the immediate children, not grand etc.
     let mut people = vec![node.person.clone()];
 
     for child in &node.children {
         people.extend(collect_people(child));
     }
     people
+}
+
+impl FamilyTreeNode {
+    pub fn new(name: &str) -> Self {
+        FamilyTreeNode {
+            name: name.to_string(),
+            children: Vec::new(),
+        }
+    }
+    fn create_d3_tree(node: &D3Node) -> Self {
+        Self {
+            name: node.person.name.clone(),
+            children: node.children.iter().map(Self::create_d3_tree).collect(),
+        }
+    }
 }
 
 #[allow(clippy::module_name_repetitions)]
@@ -44,21 +71,35 @@ impl Task for SeedTree {
             std::process::exit(1);
         }
 
-        let tree_nodes = match run_grapher(path, "Ark1", "family_data.js", CreateOptions::D3) {
-            Ok(nodes) => {
+        let family_graph = match run_grapher(path, "Ark1") {
+            Ok(graph) => {
                 println!("Task Complete!");
                 println!("   File 'family_data.js' has been created.");
-                nodes
+                graph
             }
             Err(e) => {
                 eprintln!("Error generating tree: {}", e);
                 std::process::exit(1);
             }
         };
-        let json_value = serde_json::to_value(&tree_nodes)?;
+
+        // TODO: Using this function only to avoid having to include petgraph types, but in
+        // the future, i should make the filtering myself
+        let tree_nodes = create_d3_export(&family_graph, "family_data.js")
+            .expect("Could not create family_data.js file");
+        // Strips tree_nodes of information, such that only tree remains
+        let only_tree = tree_nodes
+            .first()
+            .map(FamilyTreeNode::create_d3_tree)
+            .expect("The first entry should be the forefather, who is not present");
+
+        let json_value = serde_json::to_value(&only_tree)?;
+        // Now save the tree in memory
         FamilyTreeActive::create_snapshot(&app_context.db, json_value)
             .await
             .map_err(|e| Error::Message(format!("JSON serialization error: {}", e)))?;
+
+        // TODO: Now we should ensure there is a user for each person.
 
         // now create users in db
         let all_people = collect_people(&tree_nodes[0]);
@@ -80,7 +121,9 @@ impl Task for SeedTree {
                 continue;
             }
             // Important to remember how this looks
-            let hashed_password = hash::hash_password(person.mobile_number.trim())
+            // TODO: Should alter this to a random generation
+            let random_str = hash::random_string(RANDOM_PASSWD_LENGTH as usize);
+            let hashed_password = hash::hash_password(&random_str)
                 .map_err(|e| Error::Message(format!("Password hashing error: {}", e)))?;
 
             let user = user::ActiveModel {
@@ -99,6 +142,9 @@ impl Task for SeedTree {
                 Err(e) => eprintln!("Error creating user {}: {}", person.email, e),
             }
         }
+
+        // TODO: Then, 'medlem' should be updated with info from tree_nodes
+
         println!("Tree generated successfully!");
 
         Ok(())

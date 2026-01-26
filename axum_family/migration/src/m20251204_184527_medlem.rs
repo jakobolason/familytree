@@ -1,5 +1,7 @@
 use sea_orm_migration::{prelude::*, schema::*};
 
+use crate::m20250101_000001_user::User;
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
@@ -24,11 +26,20 @@ impl MigrationTrait for Migration {
             .col(string(Medlem::City).null())
             .col(date(Medlem::Birthdate).null())
             .col(string(Medlem::Status).default("Alive"))
-            .col(uuid(Medlem::UserPid).null())
+            // Link a user to be able to handle this medlem
+            .col(uuid_null(Medlem::UserPid).null())
+            .foreign_key(
+                ForeignKey::create()
+                    .name("fk-medlem-user")
+                    .from(Medlem::Table, Medlem::UserPid)
+                    .to(User::Table, User::Pid)
+                    .on_delete(ForeignKeyAction::SetNull)
+                    .on_update(ForeignKeyAction::Cascade),
+            )
             // store [uuid, uuid]
-            .col(json_binary(Medlem::ParentsPid).null())
-            .col(json_binary(Medlem::PreviousPartners).null())
-            .col(json_binary(Medlem::ChildrenPid).null())
+            .col(json_binary_null(Medlem::ParentsPid))
+            .col(json_binary_null(Medlem::PreviousPartners))
+            .col(json_binary_null(Medlem::ChildrenPid))
             .col(uuid(Medlem::PartnerPid).null())
             .col(date_time(Medlem::CreatedAt).default(Expr::current_timestamp()))
             .col(date_time(Medlem::UpdatedAt).default(Expr::current_timestamp()))

@@ -1280,9 +1280,9 @@ dependencies = [
 
 [[package]]
 name = "family_graph"
-version = "0.1.1"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee9beed4e14a6fe82779ceb298df4c0746018d5c3b851aed90f21a018ae19991"
+checksum = "b76ad819a1678a781f28984cc45aff6d18530e0f477252628e07bd02bac13c1d"
 dependencies = [
  "calamine",
  "dotenv",
