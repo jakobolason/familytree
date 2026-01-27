@@ -7,26 +7,29 @@ const toast = useToast()
 
 const schema = z.object({
   email: z.email("Invalid email"),
-  password: z
-    .string("Password is required")
-    .min(8, "Must be at least 8 characters"),
 });
 
 type Schema = z.output<typeof schema>;
 
 const state = reactive<Partial<Schema>>({
   email: undefined,
-  password: undefined,
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    const result = await signIn({
-      email: event.data.email,
-      password: event.data.password,
-    }, {callbackUrl: '/'});
+  const payload = {
+  email: event.data.email
+  }
+  console.log('payload: ', event.data, payload);
+    const result = await fetch('http://localhost:8086/api/magic-link', { method: 'POST',
+    headers: {
+    'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload)
+    })
 
-    if (result?.error) {
+console.log('result: ', result);
+    if (!result?.ok) {
       toast.add({
         title: "Authentication Failed",
         description: result.error || "Invalid email or password.",
@@ -45,8 +48,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (String(error).includes("FetchError")) {
       console.error("Unauthorized credentials")
       toast.add({
-        title: "Authentication Failed",
-        description: "Invalid email or password.",
+        title: "Sending error",
+        description: "Invalid email.",
         color: "error",
       });
     } else {
@@ -55,7 +58,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: "An unexpected error occurred. Please try again.",
         color: "error",
       });
-      console.error('Login error:', );
+      console.error('Magic link creation error:' );
       console.log(error);
     }
       }
@@ -64,17 +67,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
+  <p> Brug din email, så modtager du en mail du kan logge ind med!</p>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormField label="Email" name="email">
       <UInput v-model="state.email" />
     </UFormField>
-
-    <UFormField label="Password" name="password">
-      <UInput v-model="state.password" type="password" />
-    </UFormField>
-
     <UButton type="submit"> Submit </UButton>
   </UForm>
-  <p> Første gang du logger ind?</p>
-  <UButton variant="text" :to="{ name: 'magic-link' }"> Brug et magic link, og kom ind med din email </UButton>
 </template>

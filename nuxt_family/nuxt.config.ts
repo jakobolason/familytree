@@ -45,7 +45,8 @@ export default defineNuxtConfig({
         signIn: { path: 'api/auth/login', method: 'post' },
         signOut: { path: '/api/auth/logout', method: 'post' },
         getSession: { path: '/api/user/current', method: 'get' },
-        signUp: false,
+        signUp: { path: '/api/magic-link/verify', method: 'get' }
+        //signUp: false,
         // getSession: { path: '/user/current', method: 'get' },
       },
       token: {

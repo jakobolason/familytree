@@ -11,23 +11,23 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.74",
-    "@iconify-json/simple-icons": "^1.2.59",
+    "@iconify-json/lucide": "^1.2.87",
+    "@iconify-json/simple-icons": "^1.2.68",
     "@nuxt/hints": "1.0.0-alpha.2",
     "@nuxt/image": "2.0.0",
     "@nuxt/test-utils": "3.20.1",
-    "@nuxt/ui": "^4.2.1",
+    "@nuxt/ui": "^4.4.0",
     "@sidebase/nuxt-auth": "1.1.1",
     "d3": "^7.9.0",
     "next-auth": "~4.21.1",
-    "nuxt": "^4.2.1",
-    "zod": "^4.1.13"
+    "nuxt": "^4.3.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@nuxt/eslint": "^1.10.0",
-    "eslint": "^9.39.1",
+    "@nuxt/eslint": "^1.13.0",
+    "eslint": "^9.39.2",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.1.5"
+    "vue-tsc": "^3.2.4"
   },
   "packageManager": "pnpm@10.23.0"
 }

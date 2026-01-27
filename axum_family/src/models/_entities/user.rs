@@ -10,6 +10,7 @@ pub struct Model {
     pub updated_at: DateTime,
     #[sea_orm(primary_key)]
     pub id: i64,
+    #[sea_orm(unique)]
     pub pid: Uuid,
     #[sea_orm(unique)]
     pub email: String,
@@ -24,4 +25,13 @@ pub struct Model {
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-pub enum Relation {}
+pub enum Relation {
+    #[sea_orm(has_many = "super::medlem::Entity")]
+    Medlem,
+}
+
+impl Related<super::medlem::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Medlem.def()
+    }
+}

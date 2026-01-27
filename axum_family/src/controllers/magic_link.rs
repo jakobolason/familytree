@@ -16,6 +16,12 @@ pub struct MagicLinkParams {
     pub email: String,
 }
 
+#[derive(Debug, Deserialize, val::Validate, Serialize)]
+pub struct MagicLinkToken {
+    #[validate(email)]
+    pub token: String,
+}
+
 /// Magic link authentication provides a secure and passwordless way to log in to the application.
 ///
 /// # Flow
@@ -59,10 +65,10 @@ async fn magic_link(
 
 /// Verifies a magic link token and authenticates the user.
 async fn magic_link_verify(
-    Path(token): Path<String>,
     State(ctx): State<AppContext>,
+    Json(params): Json<MagicLinkToken>,
 ) -> Result<Response> {
-    let Ok(user) = user::Model::find_by_magic_token(&ctx.db, &token).await else {
+    let Ok(user) = user::Model::find_by_magic_token(&ctx.db, &params.token).await else {
         // we don't want to expose our user email. if the email is invalid we still
         // returning success to the caller
         return unauthorized("unauthorized!");
@@ -83,5 +89,5 @@ pub fn routes() -> Routes {
     Routes::new()
         .prefix("magic-link")
         .add("/", post(magic_link))
-        .add("/{token}", get(magic_link_verify))
+        .add("/verify", get(magic_link_verify))
 }

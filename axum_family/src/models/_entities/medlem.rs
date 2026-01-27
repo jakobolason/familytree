@@ -17,6 +17,7 @@ pub struct Model {
     pub address: Option<String>,
     pub city: Option<String>,
     pub birthdate: Option<Date>,
+    pub final_date: Option<Date>,
     pub status: String,
     pub user_pid: Option<Uuid>,
     #[sea_orm(column_type = "JsonBinary", nullable)]
@@ -31,4 +32,19 @@ pub struct Model {
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-pub enum Relation {}
+pub enum Relation {
+    #[sea_orm(
+        belongs_to = "super::user::Entity",
+        from = "Column::UserPid",
+        to = "super::user::Column::Pid",
+        on_update = "Cascade",
+        on_delete = "SetNull"
+    )]
+    User,
+}
+
+impl Related<super::user::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::User.def()
+    }
+}

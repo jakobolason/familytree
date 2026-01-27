@@ -11,7 +11,7 @@ impl MigrationTrait for Migration {
             .col(date_time(User::CreatedAt).default(Expr::current_timestamp()))
             .col(date_time(User::UpdatedAt).default(Expr::current_timestamp()))
             .col(big_integer(User::Id).auto_increment().primary_key().take())
-            .col(uuid(User::Pid))
+            .col(uuid(User::Pid).unique_key())
             .col(string_uniq(User::Email))
             .col(string(User::Password))
             .col(string(User::ApiKey).unique_key())

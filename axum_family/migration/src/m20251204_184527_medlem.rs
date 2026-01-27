@@ -20,14 +20,15 @@ impl MigrationTrait for Migration {
             .col(uuid(Medlem::Pid).unique_key())
             // Core info
             .col(string(Medlem::Name))
-            .col(string_uniq(Medlem::Email).unique_key())
-            .col(string(Medlem::PhoneNr).null())
-            .col(string(Medlem::Address).null())
-            .col(string(Medlem::City).null())
-            .col(date(Medlem::Birthdate).null())
+            .col(string_null(Medlem::Email))
+            .col(string_null(Medlem::PhoneNr))
+            .col(string_null(Medlem::Address))
+            .col(string_null(Medlem::City))
+            .col(date_null(Medlem::Birthdate))
+            .col(date_null(Medlem::FinalDate))
             .col(string(Medlem::Status).default("Alive"))
             // Link a user to be able to handle this medlem
-            .col(uuid_null(Medlem::UserPid).null())
+            .col(uuid_null(Medlem::UserPid))
             .foreign_key(
                 ForeignKey::create()
                     .name("fk-medlem-user")
@@ -40,7 +41,7 @@ impl MigrationTrait for Migration {
             .col(json_binary_null(Medlem::ParentsPid))
             .col(json_binary_null(Medlem::PreviousPartners))
             .col(json_binary_null(Medlem::ChildrenPid))
-            .col(uuid(Medlem::PartnerPid).null())
+            .col(uuid_null(Medlem::PartnerPid))
             .col(date_time(Medlem::CreatedAt).default(Expr::current_timestamp()))
             .col(date_time(Medlem::UpdatedAt).default(Expr::current_timestamp()))
             .to_owned();
@@ -69,6 +70,7 @@ pub enum Medlem {
     City,
     // Stateful, can change
     Birthdate,
+    FinalDate,
     Status, // Alive, Dead, Cutoff ...
     // PID mapping
     UserPid,          // The user associated with this medlem

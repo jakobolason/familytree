@@ -43,6 +43,62 @@ fn collect_people(node: &D3Node) -> Vec<Person> {
     }
     people
 }
+
+async fn create_user(
+    person: &Person,
+    full_name: &str,
+    db: &DatabaseConnection,
+) -> Result<Option<Uuid>, Error> {
+    // I need all of these, otherwise the person might not be interested either way
+    if person.email.trim().is_empty()
+        || person.name.trim().is_empty()
+        || person.mobile_number.trim().is_empty()
+        || person.birthdate.contains("-")
+    // If this last one is present, then this person has sadly passed
+    {
+        Ok(None)
+    } else {
+        let exists = user::Model::find_by_full_name(db, full_name).await;
+
+        let user = match exists {
+            Ok(user) => {
+                println!("User {full_name} exists");
+                user
+            }
+            Err(ModelError::EntityNotFound) => {
+                // NOTE: All users password's are initialized as random
+                let random_str = hash::random_string(RANDOM_PASSWD_LENGTH as usize);
+                let hashed_password = hash::hash_password(&random_str)
+                    .map_err(|e| Error::Message(format!("Password hashing error: {}", e)))?;
+
+                let user = user::ActiveModel {
+                    pid: Set(Uuid::new_v4()),
+                    // TODO: Should remove '*' from names
+                    name: Set(format!(
+                        "{} {}",
+                        person.name.clone(),
+                        person.last_name.clone()
+                    )),
+                    email: Set(person.email.clone()),
+                    password: Set(hashed_password),
+                    api_key: Set(format!("key-{}", Uuid::new_v4())),
+                    ..Default::default()
+                };
+                user.insert(db).await?
+            }
+            Err(e) => {
+                eprintln!("Error checking user {}: {}", person.name, e);
+                return Err(Error::Model(e));
+            }
+        };
+
+        // Now update information in db, if there is a mismatch
+        // Using the user instance
+        let user_pid = user.pid;
+        Ok(Some(user_pid))
+    }
+}
+
 #[allow(clippy::module_name_repetitions)]
 pub struct SeedTree;
 #[async_trait]
@@ -87,85 +143,55 @@ impl Task for SeedTree {
         };
 
         // TODO: Using this function only to avoid having to include petgraph types, but in
-        // the future, i should make the filtering myself
+        // the future, i should make the filtering myself, since that will allow partners to be
+        // included
         let tree_nodes = create_d3_export(&family_graph, "family_data.js")
             .expect("Could not create family_data.js file");
 
-        // now create users in db
         let mut medlem_pids = HashMap::new();
         let all_people = collect_people(&tree_nodes[0]);
         for person in all_people {
-            // I need all of these, otherwise the person might not be interested either way
-            if person.email.trim().is_empty()
-                || person.name.trim().is_empty()
-                || person.mobile_number.trim().is_empty()
-                || person.birthdate.contains("-")
-            // If this last one is present, then this person has sadly passed
-            {
-                continue;
-            }
             let full_name = format!("{} {}", person.name.clone(), person.last_name.clone());
-            let exists = user::Model::find_by_full_name(&app_context.db, &full_name).await;
 
-            let user = match exists {
-                Ok(user) => {
-                    println!("User {full_name} exists");
-                    user
-                }
-                Err(ModelError::EntityNotFound) => {
-                    // NOTE: All users password's are initialized as random
-                    let random_str = hash::random_string(RANDOM_PASSWD_LENGTH as usize);
-                    let hashed_password = hash::hash_password(&random_str)
-                        .map_err(|e| Error::Message(format!("Password hashing error: {}", e)))?;
+            // Only creates a user with contact information and who is alive
+            let user_pid = create_user(&person, &full_name, &app_context.db).await?;
 
-                    let user = user::ActiveModel {
-                        pid: Set(Uuid::new_v4()),
-                        // TODO: Should remove '*' from names
-                        name: Set(format!(
-                            "{} {}",
-                            person.name.clone(),
-                            person.last_name.clone()
-                        )),
-                        email: Set(person.email.clone()),
-                        password: Set(hashed_password),
-                        api_key: Set(format!("key-{}", Uuid::new_v4())),
-                        ..Default::default()
-                    };
-                    match user.insert(&app_context.db).await {
-                        Ok(user) => {
-                            println!(
-                                "Created user {} (pass: {})",
-                                person.email, person.mobile_number
-                            );
-                            user
-                        }
-                        Err(e) => {
-                            eprintln!("Error creating user {}: {}", person.email, e);
-                            continue;
-                        }
-                    }
-                }
-                Err(e) => {
-                    eprintln!("Error checking user {}: {}", person.name, e);
-                    continue;
-                }
-            };
-
-            // Now update information in db, if there is a mismatch
-            // Using the user instance
-            let user_pid = user.pid;
+            // Now we create models for all people, and ensure that the information is up to date
             let exists = medlem::Model::find_by_name(&app_context.db, &full_name).await;
             let model = match exists {
+                // TODO: Should check that the fields in db correspond to current values
                 Ok(model) => model,
                 Err(ModelError::EntityNotFound) => {
-                    let parsed_date = NaiveDate::parse_from_str(&person.birthdate, "%d.%m.%y");
+                    // TODO
+                    let (birthdate, final_date) =
+                        match NaiveDate::parse_from_str(&person.birthdate, "%d.%m.%Y") {
+                            Ok(date) => (Some(date), None),
+                            Err(_) => {
+                                let parts: Vec<&str> =
+                                    person.birthdate.split('-').map(|s| s.trim()).collect();
+                                if parts.len() == 2 {
+                                    let parse_year = |y_str: &str| -> Option<NaiveDate> {
+                                        y_str
+                                            .parse::<i32>()
+                                            .ok()
+                                            .and_then(|y| NaiveDate::from_ymd_opt(y, 1, 1))
+                                    };
+                                    let start = parse_year(parts[0]);
+                                    let end = parse_year(parts[1]);
+                                    (start, end)
+                                } else {
+                                    (None, None)
+                                }
+                            }
+                        };
                     // Create new medlem entry
                     let new_medlem = medlem::ActiveModel {
                         pid: Set(Uuid::new_v4()),
-                        user_pid: Set(Some(user_pid)),
+                        user_pid: Set(user_pid),
                         name: Set(full_name.clone()),
                         email: Set(person.email.clone()),
-                        birthdate: Set(parsed_date.ok()),
+                        birthdate: Set(birthdate),
+                        final_date: Set(final_date),
                         ..Default::default()
                     };
                     match new_medlem.insert(&app_context.db).await {
@@ -186,7 +212,9 @@ impl Task for SeedTree {
             };
             medlem_pids.insert(full_name, model.pid);
         }
-        // now
+
+        // now with all users, the tree should then contain the full name, children and the
+        // medlem_pid to be able to fetch information about the medlem, which can be changed.
 
         // Strips tree_nodes of information, such that only tree remains
         let only_tree = tree_nodes

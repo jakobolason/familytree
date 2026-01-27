@@ -1,33 +1,49 @@
 use crate::{
     models::_entities::user,
-    views::auth::{LoginResponse, PasswordLoginParams, SessionResponse},
+    views::auth::{LoginMethods, LoginResponse, PasswordLoginParams, SessionResponse},
 };
 use loco_rs::{auth::jwt, hash, prelude::*};
 
 async fn login(
     State(ctx): State<AppContext>,
-    Json(params): Json<PasswordLoginParams>,
+    Json(params): Json<LoginMethods>,
 ) -> Result<Response> {
-    // Find user by email, could be moved to models/user.rs
-    let user = user::Entity::find()
-        .filter(user::Column::Email.eq(&params.email))
-        .one(&ctx.db)
-        .await?;
-    let Some(user) = user else {
-        return unauthorized("unauthorized!");
-    };
+    let user = match params {
+        LoginMethods::Password(params) => {
+            // Find user by email, could be moved to models/user.rs
+            let user = user::Entity::find()
+                .filter(user::Column::Email.eq(&params.email))
+                .one(&ctx.db)
+                .await?;
+            let user = match user {
+                Some(u) => u,
+                None => return unauthorized("unauthorized!"),
+            };
 
-    // Verify password
-    if !hash::verify_password(&params.password, &user.password) {
-        return unauthorized("unauthorized!");
-    }
+            // Verify password
+            if !hash::verify_password(&params.password, &user.password) {
+                return unauthorized("unauthorized!");
+            }
+            user
+        }
+        LoginMethods::Magic(params) => {
+            let Ok(user) = user::Model::find_by_magic_token(&ctx.db, &params.token).await else {
+                // we don't want to expose our user email. if the email is invalid we still
+                // returning success to the caller
+                return unauthorized("unauthorized!");
+            };
+
+            let user = user.into_active_model().clear_magic_link(&ctx.db).await?;
+            user
+        }
+    };
 
     // Generate the JWT
     let jwt_secret = ctx.config.get_jwt_config()?;
     let token = jwt::JWT::new(&jwt_secret.secret)
         .generate_token(
             jwt_secret.expiration,
-            params.email.to_string(),
+            user.email.to_string(),
             Default::default(),
         )
         .map_err(|e| {

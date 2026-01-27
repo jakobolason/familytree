@@ -15,12 +15,8 @@ impl MigrationTrait for Migration {
                     .primary_key()
                     .take(),
             )
-            .col(json_binary(FamilyTree::TreeData).null())
-            .col(
-                date_time(FamilyTree::UpdatedAt)
-                    .default(Expr::current_timestamp())
-                    .null(),
-            )
+            .col(json_binary_null(FamilyTree::TreeData))
+            .col(date_time_null(FamilyTree::UpdatedAt).default(Expr::current_timestamp()))
             .to_owned();
         m.create_table(table).await?;
         Ok(())

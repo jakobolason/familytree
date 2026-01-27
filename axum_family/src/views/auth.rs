@@ -45,6 +45,18 @@ pub struct PasswordLoginParams {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+pub struct MagicLinkLoginParams {
+    pub token: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum LoginMethods {
+    Password(PasswordLoginParams),
+    Magic(MagicLinkLoginParams),
+}
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct SessionResponse {
     pub pid: String,
     pub name: String,
