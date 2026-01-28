@@ -1,128 +1,49 @@
-import { tree } from "#build/ui";
-import * as d3 from "d3";
-// import { familyTreeData } from "./treeData";
+import * as d3 from 'd3';
 
 export const useFamilyTree = () => {
-  // State
-  // const rawData = ref(null);
-  const runtimeConfig = useRuntimeConfig();
   const nodes = ref([]);
   const links = ref([]);
 
-  const token = useCookie('auth.token');
-  const authHeader = computed(() => {
-    return token.value ? { Authorization: `Bearer ${token.value}` } : {};
-  })
-  const apiEndpoint = runtimeConfig.public.apiEndpoint;
-  const { data: treeData, status, error, refresh, clear } =
-    useFetch(`${apiEndpoint}/api/user/tree`, {
-      default: () => [],
-      lazy: true,
-      headers: authHeader,
-    });
-  console.log('tree data: ', treeData.value);
-  // Config
-  const config = {
-    width: 1000,
-    height: 2000,
-    margin: { top: 50, right: 90, bottom: 50, left: 150 },
-    nodeRadius: 10,
-    duration: 400,
-  };
+  const { data: treeData, status, error, refresh } = useFetch('/api/tree', {
+    lazy: true,
+    default: () => null // Start as null so we can check for existence
+  });
 
-  // D3 setup
-  const treeLayout = d3
-    .tree()
-    .size([
-      config.height - config.margin.top - config.margin.bottom,
-      config.width - config.margin.left - config.margin.right - 100,
-    ]);
+  // The Layout Configuration
+  // [50, 100] means: 50px vertical space between siblings, 100px horizontal space between generations.
+  const treeLayout = d3.tree().nodeSize([50, 100]);
 
-  const diagonal = d3
-    .linkHorizontal()
-    .x((d) => d.y)
-    .y((d) => d.x);
+  // Whenever data arrives from the backend, recalculate the D3 layout automatically.
+  watch(treeData, (newData) => {
+    if (!newData) return;
 
-  const previousPositions = new Map();
-  let nodeIdCounter = 0;
+    // should not be array
+    const rawData = Array.isArray(newData) ? newData[0] : newData;
 
-  // Calculate tree layout
-  const calculateTreeLayout = () => {
-    if (!treeData.value || treeData.value.length === 0) {
-      console.warn("No tree data available");
+    if (!rawData) {
+      console.warn("Tree data is empty");
       return;
     }
-    console.log('in calculate, treeData: ', treeData.value)
-    const root = d3.hierarchy(treeData.value[0]);
 
-    root.descendants().forEach((d) => {
-      if (!d.data.id) d.data.id = `gen-${nodeIdCounter++}`;
-    });
-
+    const root = d3.hierarchy(rawData);
     treeLayout(root);
 
-    nodes.value.forEach((n) =>
-      previousPositions.set(n.data.id, { x: n.x, y: n.y }),
-    );
-
     nodes.value = root.descendants();
-    links.value = root.links().map((link) => ({
-      pathD: diagonal(link),
-      targetId: link.target.data.id,
+    links.value = root.links().map(link => ({
+      pathD: d3.linkHorizontal()
+        .x(d => d.y)
+        .y(d => d.x)(link),
+      targetId: link.target.data.id || link.target.data.pid
     }));
-  };
 
-  // Transition hooks
-  const onNodeBeforeEnter = (el: Element) => {
-    const id = el.getAttribute("key");
-    const node = nodes.value.find((n) => n.data.id == id);
-    let x = config.margin.top;
-    let y = config.margin.left;
-
-    if (node && node.parent) {
-      const prev = previousPositions.get(node.parent.data.id);
-      if (prev) {
-        x = prev.x;
-        y = prev.y;
-      }
-    }
-    d3.select(el).attr("transform", `translate(${y},${x})`);
-  };
-
-  watch(treeData, () => {
-    calculateTreeLayout();
   }, { immediate: true });
-
-  const onNodeEnter = (el: Element, done: () => void) => {
-    const dataset = (el as HTMLElement).dataset;
-    d3.select(el)
-      .transition()
-      .duration(config.duration)
-      .attr("transform", `translate(${dataset.y},${dataset.x})`)
-      .on("end", done);
-  };
-
-  const onNodeLeave = (el: Element, done: () => void) => {
-    d3.select(el)
-      .transition()
-      .duration(config.duration)
-      .style("opacity", 0)
-      .on("end", done);
-  };
 
   return {
     treeData,
     status,
     error,
-    refresh,
-    clear,
     nodes,
     links,
-    config,
-    calculateTreeLayout,
-    onNodeBeforeEnter,
-    onNodeEnter,
-    onNodeLeave,
-    previousPositions,
+    refresh
   };
 };

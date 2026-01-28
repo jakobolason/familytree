@@ -23,7 +23,7 @@ impl FamilyTreeNode {
     fn create_d3_tree(node: &D3Node, medlem_pids: &HashMap<String, Uuid>) -> Self {
         let full_name = format!("{} {}", node.person.name, node.person.last_name);
         Self {
-            name: node.person.name.clone(),
+            name: full_name.clone(),
             pid: medlem_pids.get(&full_name).copied(),
             children: node
                 .children

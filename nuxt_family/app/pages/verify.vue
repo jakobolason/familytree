@@ -1,38 +1,43 @@
 <script setup lang="ts">
- definePageMeta({
-  auth: false
-  })
+definePageMeta({
+  public: true
+})
 const route = useRoute()
-const { signIn } = useAuth()
-const toast = useToast() // Assuming you use Nuxt UI toast
+const toast = useToast()
+const { fetch } = useUserSession()
 
 async function onSubmit(token: String) {
   try {
-    const result = await signUp({
-      token: token
-    }, {callbackUrl: '/'});
+    let response = await $fetch('/api/auth/login', {
+      method: 'POST',
+      body: {
+        token: token,
+      }
+    })
 
-    if (result?.error) {
+    console.log('response: ', response);
+    if (!response?.ok) {
       toast.add({
         title: "Authentication Failed",
-        description: result.error || "Invalid email or password.",
+        description: response.error || "Invalid magic link.",
         color: "error",
       });
     } else {
+      await fetch()
       toast.add({
         title: "Success",
         description: "You have been logged in successfully.",
         color: "success",
       });
-      // Optional: redirect after successful login
       await navigateTo('/');
     }
   } catch (error) {
+    console.log('error: ', error);
     if (String(error).includes("FetchError")) {
       console.error("Unauthorized credentials")
       toast.add({
         title: "Authentication Failed",
-        description: "Invalid email or password.",
+        description: "Invalid magic link.",
         color: "error",
       });
     } else {
@@ -41,35 +46,25 @@ async function onSubmit(token: String) {
         description: "An unexpected error occurred. Please try again.",
         color: "error",
       });
-      console.error('Login error:', );
+      console.error('Login error:',);
       console.log(error);
     }
-      }
-  console.log(event.data);
+  }
 }
 
-
-
-// We run this immediately when the page loads
 onMounted(async () => {
   const token = route.query.token
-
   if (!token) {
     toast.add({ title: 'Error', description: 'No token found in URL', color: 'error' })
     return
   }
 
   try {
-    // 1. Call the 'magic-link' provider we defined in Step 1
-    // 2. Pass the token as the credential
-    // 3. Set redirect to true and point to your reset page
-    await signIn('magic-link', {
-      token: token,
-      callbackUrl: '/reset',
-      redirect: true
-    })
+    await onSubmit(String(token))
   } catch (error) {
+    console.log('error: ', error);
     toast.add({ title: 'Error', description: 'Invalid or expired link', color: 'error' })
+    await navigateTo('/login')
   }
 })
 </script>
@@ -77,6 +72,6 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col items-center justify-center h-screen">
     <UIcon name="i-heroicons-arrow-path" class="animate-spin w-10 h-10" />
-    <p class="mt-4 text-gray-500">Verifying your link...</p>
+    <p class="mt-4 text-gray-500">Bekræfter dit link...</p>
   </div>
 </template>

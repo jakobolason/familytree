@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     "@nuxt/hints",
     "@nuxt/image",
     "@nuxt/test-utils",
-    "@sidebase/nuxt-auth",
+    'nuxt-auth-utils',
   ],
 
   devtools: {
@@ -32,43 +32,43 @@ export default defineNuxtConfig({
     }
   },
 
-  auth: {
-    isEnabled: true,
-    disableServerSideAuth: false,
-    // originEnvKey: 'AUTH_ORIGIN',
-    // baseUrl: process.env.AUTH_ORIGIN,
-    baseURL: '/api/auth',
-    globalAppMiddleware: true,
-    provider: {
-      type: 'local',
-      endpoints: {
-        signIn: { path: 'api/auth/login', method: 'post' },
-        signOut: { path: '/api/auth/logout', method: 'post' },
-        getSession: { path: '/api/user/current', method: 'get' },
-        signUp: { path: '/api/magic-link/verify', method: 'get' }
-        //signUp: false,
-        // getSession: { path: '/user/current', method: 'get' },
-      },
-      token: {
-        signInResponseTokenPointer: '/token',
-        type: 'Bearer',
-        cookieName: 'auth.token',
-        headerName: 'Authorization',
-        maxAgeInSeconds: 1800,
-        sameSiteAttribute: 'lax',
-        //cookieDomain: 'localhost',
-        secureCookieAttribute: false,
-        httpOnlyCookieAttribute: false,
-      },
-      sessionRefresh: {
-        enablePeriodically: true,
-        enableOnWindowFocus: true,
-      },
-      pages: {
-        login: '/login'
-      }
-    }
-  },
+  // auth: {
+  //   isEnabled: true,
+  //   disableServerSideAuth: false,
+  //   // originEnvKey: 'AUTH_ORIGIN',
+  //   // baseUrl: process.env.AUTH_ORIGIN,
+  //   baseURL: '/api/auth',
+  //   globalAppMiddleware: true,
+  //   provider: {
+  //     type: 'local',
+  //     endpoints: {
+  //       signIn: { path: 'api/auth/login', method: 'post' },
+  //       signOut: { path: '/api/auth/logout', method: 'post' },
+  //       getSession: { path: '/api/user/current', method: 'get' },
+  //       signUp: { path: '/api/magic-link/verify', method: 'get' }
+  //       //signUp: false,
+  //       // getSession: { path: '/user/current', method: 'get' },
+  //     },
+  //     token: {
+  //       signInResponseTokenPointer: '/token',
+  //       type: 'Bearer',
+  //       cookieName: 'auth.token',
+  //       headerName: 'Authorization',
+  //       maxAgeInSeconds: 1800,
+  //       sameSiteAttribute: 'lax',
+  //       //cookieDomain: 'localhost',
+  //       secureCookieAttribute: false,
+  //       httpOnlyCookieAttribute: false,
+  //     },
+  //     sessionRefresh: {
+  //       enablePeriodically: true,
+  //       enableOnWindowFocus: true,
+  //     },
+  //     pages: {
+  //       login: '/login'
+  //     }
+  //   }
+  // },
 
   compatibilityDate: "2025-01-15",
 

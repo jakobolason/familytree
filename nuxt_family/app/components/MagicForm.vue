@@ -2,7 +2,6 @@
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
-const {signIn } = useAuth()
 const toast = useToast()
 
 const schema = z.object({
@@ -17,18 +16,19 @@ const state = reactive<Partial<Schema>>({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-  const payload = {
-  email: event.data.email
-  }
-  console.log('payload: ', event.data, payload);
-    const result = await fetch('http://localhost:8086/api/magic-link', { method: 'POST',
-    headers: {
-    'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload)
+    const payload = {
+      email: event.data.email
+    }
+    console.log('payload: ', event.data, payload);
+    const result = await fetch('http://localhost:8086/api/magic-link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
     })
 
-console.log('result: ', result);
+    console.log('result: ', result);
     if (!result?.ok) {
       toast.add({
         title: "Authentication Failed",
@@ -58,10 +58,10 @@ console.log('result: ', result);
         description: "An unexpected error occurred. Please try again.",
         color: "error",
       });
-      console.error('Magic link creation error:' );
+      console.error('Magic link creation error:');
       console.log(error);
     }
-      }
+  }
   console.log(event.data);
 }
 </script>

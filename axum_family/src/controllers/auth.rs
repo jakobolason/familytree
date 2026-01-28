@@ -27,6 +27,7 @@ async fn login(
             user
         }
         LoginMethods::Magic(params) => {
+            println!("Logging in via magic link");
             let Ok(user) = user::Model::find_by_magic_token(&ctx.db, &params.token).await else {
                 // we don't want to expose our user email. if the email is invalid we still
                 // returning success to the caller
@@ -38,6 +39,8 @@ async fn login(
         }
     };
 
+    tracing::info!("User {} logged in", user.email);
+    println!("user login method verified!");
     // Generate the JWT
     let jwt_secret = ctx.config.get_jwt_config()?;
     let token = jwt::JWT::new(&jwt_secret.secret)

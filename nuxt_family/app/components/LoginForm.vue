@@ -2,7 +2,6 @@
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
-const {signIn } = useAuth()
 const toast = useToast()
 
 const schema = z.object({
@@ -21,24 +20,32 @@ const state = reactive<Partial<Schema>>({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    const result = await signIn({
-      email: event.data.email,
-      password: event.data.password,
-    }, {callbackUrl: '/'});
+    //const result = await signIn({
+    //dev/  email: event.data.email,
+    //  password: event.data.password,
+    //}, {callbackUrl: '/'});
 
-    if (result?.error) {
+    let response = await $fetch('/api/auth/login', {
+      method: 'POST',
+      body: {
+        email: event.data.email,
+        password: event.data.password,
+      }
+    })
+
+    if (!result?.error) {
       toast.add({
         title: "Authentication Failed",
         description: result.error || "Invalid email or password.",
         color: "error",
       });
     } else {
+      await fetchSession()
       toast.add({
         title: "Success",
         description: "You have been logged in successfully.",
         color: "success",
       });
-      // Optional: redirect after successful login
       await navigateTo('/');
     }
   } catch (error) {
@@ -55,10 +62,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: "An unexpected error occurred. Please try again.",
         color: "error",
       });
-      console.error('Login error:', );
+      console.error('Login error:',);
       console.log(error);
     }
-      }
+  }
   console.log(event.data);
 }
 </script>
@@ -69,12 +76,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <UInput v-model="state.email" />
     </UFormField>
 
-    <UFormField label="Password" name="password">
+    <UFormField label="Adgangskode" name="password">
       <UInput v-model="state.password" type="password" />
     </UFormField>
 
-    <UButton type="submit"> Submit </UButton>
+    <UButton type="submit"> Log ind </UButton>
   </UForm>
   <p> Første gang du logger ind?</p>
-  <UButton variant="text" :to="{ name: 'magic-link' }"> Brug et magic link, og kom ind med din email </UButton>
+  <UButton :to="{ name: 'magic-link' }"> Brug et magic link, og kom ind med din email </UButton>
 </template>
