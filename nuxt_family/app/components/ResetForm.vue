@@ -3,36 +3,31 @@ import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 const toast = useToast()
-const route = useRoute() // You likely need the token from the URL query params
+const route = useRoute()
 
-// 1. Update Schema: Add confirmPassword and use .refine() for equality check
 const schema = z.object({
-  password: z.string().min(8, "Must be at least 8 characters"),
-  confirmPassword: z.string().min(8, "Must be at least 8 characters")
+  password: z.string().min(8, "Adgangskoden skal være mindst 8 karakterer"),
+  confirmPassword: z.string().min(8, "Adgangskoden skal være mindst 8 karakterer")
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"], // This puts the error on the 'confirmPassword' field
+  message: "Adgangskoderne er ikke de samme",
+  path: ["confirmPassword"],
 });
 
 type Schema = z.output<typeof schema>;
 
-// 2. Update State to match new schema
 const state = reactive<Partial<Schema>>({
   password: undefined,
   confirmPassword: undefined,
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // NOTE: 'signIn' is for logging in. For resetting a password,
-  // you usually make a POST request to your backend with the new password.
   try {
-    const result = await $fetch('http://localhost:8086/api/auth/reset', {
+    let response = await $fetch('/api/auth/reset', {
       method: 'POST',
       body: {
         password: event.data.password,
-        token: route.query.token // Assuming the reset token is in the URL
       }
-    });
+    })
 
     toast.add({
       title: "Success",
@@ -40,7 +35,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       color: "success",
     });
 
-    await navigateTo('/login');
+    await navigateTo('/');
 
   } catch (error) {
     toast.add({
@@ -55,12 +50,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
-    <UFormField label="New Password" name="password">
-      <UInput v-model="state.password" type="password" placeholder="Enter new password" />
+    <UFormField label="Ny adgangskode" name="password">
+      <UInput v-model="state.password" type="password" placeholder="Super sikkert kodeord" />
     </UFormField>
 
-    <UFormField label="Confirm Password" name="confirmPassword">
-      <UInput v-model="state.confirmPassword" type="password" placeholder="Repeat new password" />
+    <UFormField label="Bekræft adgangskode" name="confirmPassword">
+      <UInput v-model="state.confirmPassword" type="password" placeholder="Gentage sikre kodeord" />
     </UFormField>
 
     <UButton type="submit"> Reset Password </UButton>
