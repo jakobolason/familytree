@@ -45,10 +45,11 @@ impl Model {
     ///
     /// When could not find medlem by the given token or DB query error
     pub async fn find_by_pid(db: &DatabaseConnection, pid: &str) -> ModelResult<Self> {
+        let pid_uuid = Uuid::parse_str(pid).map_err(|_| ModelError::EntityNotFound)?;
         let medlem = medlem::Entity::find()
             .filter(
                 model::query::condition()
-                    .eq(medlem::Column::Pid, pid)
+                    .eq(medlem::Column::Pid, pid_uuid)
                     .build(),
             )
             .one(db)

@@ -21,7 +21,11 @@ pub struct FamilyTreeNode {
 
 impl FamilyTreeNode {
     fn create_d3_tree(node: &D3Node, medlem_pids: &HashMap<String, Uuid>) -> Self {
-        let full_name = format!("{} {}", node.person.name, node.person.last_name);
+        let full_name = format!(
+            "{} {}",
+            node.person.name.clone().trim_start_matches('*').trim(),
+            node.person.last_name.clone()
+        );
         Self {
             name: full_name.clone(),
             pid: medlem_pids.get(&full_name).copied(),
@@ -74,11 +78,7 @@ async fn create_user(
                 let user = user::ActiveModel {
                     pid: Set(Uuid::new_v4()),
                     // TODO: Should remove '*' from names
-                    name: Set(format!(
-                        "{} {}",
-                        person.name.clone(),
-                        person.last_name.clone()
-                    )),
+                    name: Set(full_name.to_string()),
                     email: Set(person.email.clone()),
                     password: Set(hashed_password),
                     api_key: Set(format!("key-{}", Uuid::new_v4())),
@@ -91,9 +91,6 @@ async fn create_user(
                 return Err(Error::Model(e));
             }
         };
-
-        // Now update information in db, if there is a mismatch
-        // Using the user instance
         let user_pid = user.pid;
         Ok(Some(user_pid))
     }
@@ -151,7 +148,11 @@ impl Task for SeedTree {
         let mut medlem_pids = HashMap::new();
         let all_people = collect_people(&tree_nodes[0]);
         for person in all_people {
-            let full_name = format!("{} {}", person.name.clone(), person.last_name.clone());
+            let full_name = format!(
+                "{} {}",
+                person.name.clone().trim_start_matches('*').trim(),
+                person.last_name.clone()
+            );
 
             // Only creates a user with contact information and who is alive
             let user_pid = create_user(&person, &full_name, &app_context.db).await?;
@@ -192,6 +193,9 @@ impl Task for SeedTree {
                         email: Set(person.email.clone()),
                         birthdate: Set(birthdate),
                         final_date: Set(final_date),
+                        phone_nr: Set(Some(person.mobile_number.clone())),
+                        address: Set(Some(person.address.clone())),
+                        city: Set(Some(person.city.clone())),
                         ..Default::default()
                     };
                     match new_medlem.insert(&app_context.db).await {
