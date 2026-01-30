@@ -46,6 +46,6 @@ const { openProfile } = useProfile()
       </template>
     </UFooter>
 
-    <EditNode />
+    <MedlemNode />
   </div>
 </template>

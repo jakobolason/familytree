@@ -15,7 +15,7 @@
 
         <g class="nodes">
           <g v-for="node in nodes" :key="node.data.id" class="cursor-pointer"
-            :transform="`translate(${node.y},${node.x})`" @click.stop="openEditNode(node)">
+            :transform="`translate(${node.y},${node.x})`" @click.stop="openMedlemNode(node)">
             <circle :r="10" class="stroke-blue-500 stroke-[1.5px] transition-colors hover:stroke-black"
               :class="node.data._children ? 'fill-blue-200' : 'fill-white'" />
 
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import * as d3 from 'd3';
 
-const { openEditNode } = useEditNode();
+const { openMedlemNode } = useMedlemNode();
 const { treeData, nodes, links, status, error } = useFamilyTree();
 
 const containerRef = ref<HTMLElement | null>(null);

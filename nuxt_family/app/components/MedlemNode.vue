@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isOpen, nodeData, closeEditNode } = useEditNode();
+const { isOpen, nodeData, closeMedlemNode } = useMedlemNode();
 </script>
 
 <template>
