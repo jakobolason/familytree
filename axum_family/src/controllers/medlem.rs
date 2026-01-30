@@ -1,21 +1,42 @@
-use crate::models::medlem;
+use crate::models::{medlem, medlem_editors};
 use chrono::NaiveDate;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Changefields {
+    medlem_pid: String,
+    changeable_fields: medlem::ChangeableFields,
+}
 
 #[axum::debug_handler]
 async fn change_fields(
     auth: auth::JWT,
     State(ctx): State<AppContext>,
-    Json(params): Json<medlem::ChangeableFields>,
+    Json(params): Json<Changefields>,
 ) -> Result<Response> {
+    // Check that user has edit priveleges
+    let user_uuid = Uuid::parse_str(&auth.claims.pid).map_err(|_| ModelError::EntityNotFound)?;
+    let medlem_uuid =
+        Uuid::parse_str(&params.medlem_pid).map_err(|_| ModelError::EntityNotFound)?;
+    if medlem_editors::Model::is_user_editor(&ctx.db, &medlem_uuid, &user_uuid)
+        .await
+        .is_err()
+    {
+        tracing::error!(
+            "User {:?} is not authorized to edit medlem {:?}",
+            &auth.claims,
+            &params.medlem_pid
+        );
+        return unauthorized("You cannot edit this user");
+    }
     // let user = user::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
-    let medlem = medlem::Model::find_by_pid(&ctx.db, &auth.claims.pid)
+    let medlem = medlem::Model::find_by_pid(&ctx.db, &params.medlem_pid)
         .await?
         .into_active_model();
 
     let result = medlem
-        .change_fields(&ctx.db, &auth.claims.pid, params)
+        .change_fields(&ctx.db, &auth.claims.pid, params.changeable_fields)
         .await?;
     format::json(result)
 }

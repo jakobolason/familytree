@@ -21,6 +21,13 @@ impl AuthMailer {
     ///
     ///When email sending is failed
     pub async fn forgot_password(ctx: &AppContext, user: &user::Model) -> Result<()> {
+        let frontend_url = ctx
+            .config
+            .settings
+            .as_ref()
+            .and_then(|s| s.get("frontend_url"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("http://localhost:5173");
         Self::mail_template(
             ctx,
             &FORGOT,
@@ -29,7 +36,7 @@ impl AuthMailer {
                 locals: json!({
                   "name": user.name,
                   "resetToken": user.reset_token,
-                  "domain": ctx.config.server.full_url()
+                  "domain": frontend_url
                 }),
                 ..Default::default()
             },
@@ -45,6 +52,13 @@ impl AuthMailer {
     ///
     /// When email sending, which can fail
     pub async fn send_magic_link(ctx: &AppContext, user: &user::Model) -> Result<()> {
+        let frontend_url = ctx
+            .config
+            .settings
+            .as_ref()
+            .and_then(|s| s.get("frontend_url"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("http://localhost:5173");
         Self::mail_template(
             ctx,
             &MAGIC_LINK,
@@ -55,7 +69,7 @@ impl AuthMailer {
                   "token": user.magic_link_token.clone().ok_or_else(|| Error::string(
                             "the user model not contains magic link token",
                     ))?,
-                  "host": ctx.config.server.full_url()
+                  "host": frontend_url
                 }),
                 ..Default::default()
             },

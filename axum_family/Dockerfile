@@ -32,9 +32,8 @@ WORKDIR /app
 # Install runtime dependencies if needed
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /app/target/release/familytree-server-cli /app
+COPY --from=build /app/target/release/familyserver_backend-cli /app/familytree-server-cli
 COPY config /app/config
-COPY pro_admin /app/pro_admin
 #COPY assets /app/assets
 
 EXPOSE 8086

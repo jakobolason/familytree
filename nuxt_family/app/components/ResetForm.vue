@@ -48,16 +48,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+  <div class="w-full max-w-sm mx-auto flex flex-col gap-10">
+    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+      <UFormField label="Ny adgangskode" name="password">
+        <UInput v-model="state.password" type="password" placeholder="Super sikkert kodeord" />
+      </UFormField>
 
-    <UFormField label="Ny adgangskode" name="password">
-      <UInput v-model="state.password" type="password" placeholder="Super sikkert kodeord" />
-    </UFormField>
+      <UFormField label="Bekræft adgangskode" name="confirmPassword">
+        <UInput v-model="state.confirmPassword" type="password" placeholder="Gentage sikre kodeord" />
+      </UFormField>
+      <UButton type="submit"> Reset Password </UButton>
+    </UForm>
 
-    <UFormField label="Bekræft adgangskode" name="confirmPassword">
-      <UInput v-model="state.confirmPassword" type="password" placeholder="Gentage sikre kodeord" />
-    </UFormField>
-
-    <UButton type="submit"> Reset Password </UButton>
-  </UForm>
+  </div>
 </template>

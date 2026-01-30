@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { z } from 'zod'; // Optional: for nice validation schema if you want
+import { z } from 'zod';
 
-// Define the shape of data we receive
 interface MemberData {
-  pid: string; // We need the ID for the API call
+  pid: string;
   email?: string | null;
   phoneNr?: string | null;
   address?: string | null;
@@ -13,51 +12,45 @@ interface MemberData {
 const props = defineProps<{
   member: MemberData
 }>();
-
 const emit = defineEmits(['success', 'cancel']);
 const toast = useToast();
 
-// Local loading state for the save button
 const isSaving = ref(false);
 
-// Initialize form state with prop data (converting nulls to empty strings for inputs)
 const state = reactive({
   email: props.member.email || '',
-  phoneNr: props.member.phone_nr || '',
+  phoneNr: props.member.phoneNr || '',
   address: props.member.address || '',
   city: props.member.city || ''
 });
 
-// Simple validation: Email is likely required based on your Rust "Set(email)" vs "Set(Some(phone))"
 const validate = (state: any) => {
   const errors = [];
   if (!state.email) errors.push({ path: 'email', message: 'Email er påkrævet' });
   return errors;
 };
 
-// --- Submit Handler ---
 const onSubmit = async () => {
   isSaving.value = true;
 
   try {
-    // Construct the payload matching your Rust "ChangeableFields" struct
-    // We explicitly send the strings. Empty strings might need to be treated as null
-    // depending on how strict your backend validation is, but usually sending the string is fine.
     const payload = {
-      email: state.email,
-      phoneNr: state.phone_nr || null, // Send null if empty to clear it
-      address: state.address || null,
-      city: state.city || null
+      medlem_pid: props.member.pid,
+      changeable_fields: {
+        email: state.email || null,
+        phoneNr: state.phoneNr || null,
+        address: state.address || null,
+        city: state.city || null
+      }
     };
 
-    // Perform the API request
-    await $fetch(`/api/medlem/${props.member.pid}`, {
-      method: 'PUT', // or PATCH/POST depending on your route setup
+    await $fetch(`/api/medlem`, {
+      method: 'PUT',
       body: payload
     });
 
     toast.add({ title: 'Gemt!', description: 'Oplysningerne er opdateret.', color: 'green' });
-    emit('success'); // Tell parent to reload data
+    emit('success');
 
   } catch (error: any) {
     console.error(error);
@@ -73,17 +66,18 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <UForm :state="state" :validate="validate" @submit="onSubmit" class="space-y-4">
+  <UForm :state="state" :validate="validate" @submit="onSubmit" class="w-full">
 
-    <UFormGroup label="Email" name="email" required>
-      <UInput v-model="state.email" icon="i-heroicons-envelope" placeholder="navn@mail.dk" />
-    </UFormGroup>
+    <div class="w-full max-w-sm mx-auto flex flex-col gap-4 my-2">
 
-    <UFormGroup label="Telefonnummer" name="phoneNr">
-      <UInput v-model="state.phoneNr" icon="i-heroicons-phone" placeholder="+45 12 34 56 78" />
-    </UFormGroup>
+      <UFormGroup label="Email" name="email" required>
+        <UInput v-model="state.email" icon="i-heroicons-envelope" placeholder="navn@mail.dk" />
+      </UFormGroup>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <UFormGroup label="Telefonnummer" name="phoneNr">
+        <UInput v-model="state.phoneNr" icon="i-heroicons-phone" placeholder="+45 12 34 56 78" />
+      </UFormGroup>
+
       <UFormGroup label="Adresse" name="address">
         <UInput v-model="state.address" icon="i-heroicons-map-pin" placeholder="Gadenavn 1" />
       </UFormGroup>
@@ -91,13 +85,13 @@ const onSubmit = async () => {
       <UFormGroup label="By" name="city">
         <UInput v-model="state.city" icon="i-heroicons-building-office-2" placeholder="Postnr. By" />
       </UFormGroup>
+
     </div>
 
-    <UDivider class="my-6" />
 
-    <div class="flex justify-end gap-3">
-      <UButton label="Annuller" color="gray" variant="ghost" @click="$emit('cancel')" :disabled="isSaving" />
-      <UButton type="submit" label="Gem ændringer" color="black" :loading="isSaving" />
+    <div class="flex justify-between items-center max-w-sm mx-auto w-full">
+      <UButton type="submit" label="Gem ændringer" :loading="isSaving" color="primary" />
+      <UButton label="Annuller" @click="$emit('cancel')" color="gray" variant="ghost" :disabled="isSaving" />
     </div>
 
   </UForm>

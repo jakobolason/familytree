@@ -66,8 +66,8 @@ const handleEditSuccess = () => {
         </div>
       </div>
 
-      <UButton v-if="!isEditing && status === 'success'" icon="i-heroicons-pencil-square" size="sm" color="gray"
-        variant="ghost" @click="isEditing = true">
+      <UButton v-if="!isEditing && status === 'success'" icon="i-heroicons-pencil-square" size="sm"
+        @click="isEditing = true">
         Rediger
       </UButton>
     </div>

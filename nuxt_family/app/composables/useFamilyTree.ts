@@ -11,7 +11,7 @@ export const useFamilyTree = () => {
 
   // The Layout Configuration
   // [50, 100] means: 50px vertical space between siblings, 100px horizontal space between generations.
-  const treeLayout = d3.tree().nodeSize([50, 100]);
+  const treeLayout = d3.tree().nodeSize([50, 170]);
 
   // Whenever data arrives from the backend, recalculate the D3 layout automatically.
   watch(treeData, (newData) => {

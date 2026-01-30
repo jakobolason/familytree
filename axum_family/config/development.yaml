@@ -72,6 +72,10 @@ server:
     fallback:
       enable: false
     
+settings:
+  frontend_url: {{ get_env(name="FRONTEND_URL", default="http://localhost:3000") }}
+
+
 
 mailer:
   # SMTP mailer configuration.
