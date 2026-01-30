@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
       body: body
     })
 
+    console.log('Login successful for user:', loginResponse.name)
     await setUserSession(event, {
       user: {
         pid: loginResponse.pid,

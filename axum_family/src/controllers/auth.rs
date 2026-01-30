@@ -46,7 +46,7 @@ async fn login(
     let token = jwt::JWT::new(&jwt_secret.secret)
         .generate_token(
             jwt_secret.expiration,
-            user.email.to_string(),
+            user.pid.to_string(),
             Default::default(),
         )
         .map_err(|e| {
@@ -59,15 +59,13 @@ async fn login(
 }
 
 async fn get_session(State(ctx): State<AppContext>, auth: auth::JWT) -> Result<Response> {
-    let user = user::Entity::find()
-        .filter(user::Column::Email.eq(&auth.claims.pid))
-        .one(&ctx.db)
-        .await?;
-    if let Some(user) = user {
-        format::json(SessionResponse::new(&user))
-    } else {
-        tracing::error!("Error in validing token {:?}", &auth.claims);
-        unauthorized("Unauthorized session")
+    let user = user::Model::find_by_pid(&ctx.db, &auth.claims.pid).await;
+    match user {
+        Ok(user) => format::json(SessionResponse::new(&user)),
+        Err(_) => {
+            tracing::error!("Error in validing token {:?}", &auth.claims);
+            unauthorized("Unauthorized session")
+        }
     }
 }
 

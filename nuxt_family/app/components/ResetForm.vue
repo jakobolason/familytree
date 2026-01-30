@@ -35,7 +35,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       color: "success",
     });
 
-    await navigateTo('/');
+    //await navigateTo('/');
 
   } catch (error) {
     toast.add({

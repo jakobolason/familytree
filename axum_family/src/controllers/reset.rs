@@ -56,7 +56,7 @@ async fn reset(
     let Ok(user) = user::Model::find_by_pid(&ctx.db, &auth.claims.pid).await else {
         // we don't want to expose our user email. if the email is invalid we still
         // returning success to the caller
-        tracing::info!("reset token not found");
+        tracing::info!("User pid not found: {:?}", &auth.claims);
 
         return format::json(());
     };
@@ -81,7 +81,7 @@ async fn reset_token(
     let Ok(user) = user::Model::find_by_reset_token(&ctx.db, &params.token).await else {
         // we don't want to expose our user email. if the email is invalid we still
         // returning success to the caller
-        tracing::info!("reset token not found");
+        tracing::info!("reset token not found {}", &params.token);
 
         return format::json(());
     };

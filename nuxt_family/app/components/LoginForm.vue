@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
+const { fetch } = useUserSession();
 
 const toast = useToast()
 
@@ -33,14 +34,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       }
     })
 
-    if (!result?.error) {
+    if (!response?.ok) {
       toast.add({
         title: "Authentication Failed",
         description: result.error || "Invalid email or password.",
         color: "error",
       });
     } else {
-      await fetchSession()
+      await fetch()
       toast.add({
         title: "Success",
         description: "You have been logged in successfully.",

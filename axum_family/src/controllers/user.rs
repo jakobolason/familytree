@@ -1,13 +1,17 @@
 use crate::models::family_tree::FAMILY_TREE_CACHE;
+use crate::models::user;
+use crate::views::auth::SessionResponse;
 use loco_rs::prelude::*;
 
-async fn current(auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Response> {
-    // Give the JWT is valid, return the user profile
-    format::json(serde_json::json!({
-        "pid": auth.claims.pid,
-        "name": auth.claims.pid,
-        "email": auth.claims.pid,
-    }))
+async fn current(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
+    let user = user::Model::find_by_pid(&ctx.db, &auth.claims.pid).await;
+    match user {
+        Ok(user) => format::json(SessionResponse::new(&user)),
+        Err(_) => {
+            tracing::error!("Error in validing token {:?}", &auth.claims);
+            unauthorized("Unauthorized session")
+        }
+    }
 }
 
 async fn get_tree(_auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Response> {
