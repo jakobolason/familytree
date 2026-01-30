@@ -1,5 +1,5 @@
-use crate::{
-    models::_entities::user, models::family_tree::ActiveModel as FamilyTreeActive, models::medlem,
+use crate::models::{
+    _entities::user, family_tree::ActiveModel as FamilyTreeActive, medlem, medlem_editors,
 };
 use chrono::NaiveDate;
 use family_graph::{
@@ -71,6 +71,7 @@ async fn create_user(
             }
             Err(ModelError::EntityNotFound) => {
                 // NOTE: All users password's are initialized as random
+                // TODO: This should take the time, as all passwd are the same at start
                 let random_str = hash::random_string(RANDOM_PASSWD_LENGTH as usize);
                 let hashed_password = hash::hash_password(&random_str)
                     .map_err(|e| Error::Message(format!("Password hashing error: {}", e)))?;
@@ -214,6 +215,28 @@ impl Task for SeedTree {
                     continue;
                 }
             };
+            // TODO: Let the user have editor privileges to the medlem
+            if let Some(user_pid) = user_pid {
+                println!("[INFO] Addint user as editor to medlem");
+                let new_editor = medlem_editors::ActiveModel {
+                    user_pid: Set(user_pid),
+                    medlem_pid: Set(model.pid),
+                    role: Set("editor".to_string()),
+                    ..Default::default()
+                };
+                match new_editor.insert(&app_context.db).await {
+                    Ok(_) => println!("User was added as editor for medlem"),
+                    Err(e) => eprintln!(
+                        "[ERROR[ An error occurred adding user as editor to medlem: {:?}",
+                        e
+                    ),
+                }
+            } else {
+                eprintln!(
+                    "[WARN] No user created for {}, cannot add editor privileges",
+                    full_name
+                );
+            }
             medlem_pids.insert(full_name, model.pid);
         }
 

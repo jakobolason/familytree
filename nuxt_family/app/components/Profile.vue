@@ -1,6 +1,13 @@
 <script setup lang="ts">
 const { isOpen } = useProfile();
+const { user } = useUserSession();
 
+const { data: medlem_pids, status, error } = await useFetch('/api/user/medlem_pids');
+
+if (error.value) {
+  console.log('API Error:', error.value.statusCode, error.value.statusMessage);
+}
+console.log('medlem_pids: ', medlem_pids.value);
 const items = [
   {
     label: 'Oplysninger',
@@ -17,15 +24,12 @@ const items = [
 </script>
 
 <template>
-  <UModal v-model:open="isOpen" title="Profil Indstillinger" size="xl">
+  <UModal v-model:open="isOpen" title="Profil Indstillinger" size="xxl">
     <template #body>
-      <UTabs orientation="vertical" :items="items" class="w-full h-[400px] gap-8"
+      <UTabs orientation="horizontal" :items="items" class="w-full h-[400px] gap-8"
         :ui="{ list: { width: 'w-48', tab: { height: 'h-12' } }, container: 'h-full' }">
         <template #info>
-          <div class="space-y-4">
-            <h2 class="text-lg font-semibold">Personlige Oplysninger</h2>
-            <p class="text-gray-500">Formular til navn, email osv.</p>
-          </div>
+          <ProfileOverview :pids="medlem_pids" />
         </template>
 
         <template #password>

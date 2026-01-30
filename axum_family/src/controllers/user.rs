@@ -1,4 +1,5 @@
 use crate::models::family_tree::FAMILY_TREE_CACHE;
+use crate::models::medlem_editors;
 use crate::models::user;
 use crate::views::auth::SessionResponse;
 use loco_rs::prelude::*;
@@ -12,6 +13,20 @@ async fn current(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Respo
             unauthorized("Unauthorized session")
         }
     }
+}
+
+async fn get_authorized_medlem_pid(
+    auth: auth::JWT,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let user_uuid = Uuid::parse_str(&auth.claims.pid).map_err(|_| ModelError::EntityNotFound)?;
+    tracing::info!(
+        "🔍 CONTROLLER IS LOOKING FOR USER_PID: {}\n {}",
+        user_uuid,
+        auth.claims.pid
+    ); // <--- Add this
+    let medlem_pids = medlem_editors::Model::who_can_user_edit(&ctx.db, &user_uuid).await?;
+    format::json(medlem_pids)
 }
 
 async fn get_tree(_auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Response> {
@@ -33,4 +48,5 @@ pub fn routes() -> Routes {
         .add("/tree", get(get_tree))
         // Fetch user profile
         .add("/current", get(current))
+        .add("/medlem_pids", get(get_authorized_medlem_pid))
 }

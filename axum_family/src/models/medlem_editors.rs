@@ -2,10 +2,7 @@ use sea_orm::entity::prelude::*;
 
 pub use super::_entities::medlem_editors::{ActiveModel, Column, Entity, Model};
 pub type MedlemEditors = Entity;
-use loco_rs::{
-    model::{ModelError, ModelResult},
-    prelude::model::query::condition,
-};
+use loco_rs::{model::ModelResult, prelude::model::query::condition};
 #[async_trait::async_trait]
 impl ActiveModelBehavior for ActiveModel {
     async fn before_save<C>(self, _db: &C, _insert: bool) -> std::result::Result<Self, DbErr>
@@ -30,6 +27,24 @@ impl Model {
             .count(db)
             .await?;
         Ok(count > 0)
+    }
+
+    pub async fn who_can_user_edit(
+        db: &DatabaseConnection,
+        user_pid: &Uuid,
+    ) -> ModelResult<Vec<Uuid>> {
+        let editors = Entity::find()
+            .filter(condition().eq(Column::UserPid, *user_pid))
+            .filter(condition().eq(Column::Role, "editor"))
+            .all(db)
+            .await?;
+
+        let medlem_pids = editors
+            .into_iter()
+            .map(|editor| editor.medlem_pid)
+            .collect();
+
+        Ok(medlem_pids)
     }
 }
 
