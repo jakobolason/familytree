@@ -62,7 +62,11 @@ spec:
                 secretKeyRef:
                   name: loco-secrets
                   key: mailer-api-key
-
+            - name: FROM_EMAIL 
+              valueFrom:
+                secretKeyRef:
+                  name: loco-secrets
+                  key: from-email 
           resources:
             requests:
               memory: "128Mi"
