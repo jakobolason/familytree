@@ -23,7 +23,7 @@ spec:
           name: http
         env:
         # Used by the user
-        - name: AUTH_ORIGIN
+        - name: NUXT_AUTH_ORIGIN
           value: "https://api.jakobolason.dk"
         - name: NUXT_PUBLIC_API_ENDPOINT
           value: "https://api.jakobolason.dk"
