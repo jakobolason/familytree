@@ -27,6 +27,12 @@ spec:
           value: "https://api.jakobolason.dk"
         - name: NUXT_PUBLIC_API_ENDPOINT
           value: "https://api.jakobolason.dk"
+        - name: NUXT_SESSION_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nuxt-secrets
+              key: session-password
+
         # - name: NUXT_AUTH_ORIGIN
           # value: "http://axum-app:8086"
         # - name: NUXT_PUBLIC_AUTH_BASE
@@ -49,7 +55,7 @@ spec:
             memory: "128Mi"
             cpu: "100m"
           limits:
-            memory: "512Mi"
+            memory: "1024Mi"
             cpu: "1000m"
         livenessProbe:
           httpGet:
