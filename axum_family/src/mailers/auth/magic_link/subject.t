@@ -1,1 +1,1 @@
-Magic link login 
+Familiekrøniken magic login

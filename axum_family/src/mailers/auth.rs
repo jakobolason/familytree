@@ -59,10 +59,19 @@ impl AuthMailer {
             .and_then(|s| s.get("frontend_url"))
             .and_then(|v| v.as_str())
             .unwrap_or("http://localhost:5173");
+        let from_email = ctx
+            .config
+            .settings
+            .as_ref()
+            .and_then(|s| s.get("from_email"))
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string());
         Self::mail_template(
             ctx,
             &MAGIC_LINK,
             mailer::Args {
+                // from: Some("bot@jakobolason.dk".to_string()),
+                from: from_email,
                 to: user.email.to_string(),
                 locals: json!({
                   "name": user.name,

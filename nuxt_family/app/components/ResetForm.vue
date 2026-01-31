@@ -55,7 +55,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </UFormField>
 
       <UFormField label="Bekræft adgangskode" name="confirmPassword">
-        <UInput v-model="state.confirmPassword" type="password" placeholder="Gentage sikre kodeord" />
+        <UInput v-model="state.confirmPassword" type="password" placeholder="Gentag sikre kodeord" />
       </UFormField>
       <UButton type="submit"> Reset Password </UButton>
     </UForm>

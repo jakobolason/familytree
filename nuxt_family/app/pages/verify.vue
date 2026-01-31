@@ -15,7 +15,6 @@ async function onSubmit(token: String) {
       }
     })
 
-    console.log('response: ', response);
     if (!response?.ok) {
       toast.add({
         title: "Authentication Failed",
@@ -26,7 +25,7 @@ async function onSubmit(token: String) {
       await fetch()
       toast.add({
         title: "Success",
-        description: "You have been logged in successfully.",
+        description: "Du blev logget ind med et magisk link!",
         color: "success",
       });
       await navigateTo('/');

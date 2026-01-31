@@ -16,29 +16,23 @@ const state = reactive<Partial<Schema>>({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    const payload = {
-      email: event.data.email
-    }
-    console.log('payload: ', event.data, payload);
-    const result = await fetch('http://localhost:8086/api/magic-link', {
+    const result = await $fetch('/api/magic-link', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
+      body: {
+        email: event.data.email,
+      }
     })
 
-    console.log('result: ', result);
     if (!result?.ok) {
       toast.add({
-        title: "Authentication Failed",
-        description: result.error || "Invalid email or password.",
+        title: "Fejl",
+        description: result.error || "Der gik noget galt.",
         color: "error",
       });
     } else {
       toast.add({
         title: "Success",
-        description: "You have been logged in successfully.",
+        description: "Du skulle gerne have modtaget en mail, med et magisk link.",
         color: "success",
       });
       // Optional: redirect after successful login
