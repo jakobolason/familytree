@@ -67,6 +67,11 @@ spec:
                 secretKeyRef:
                   name: loco-secrets
                   key: from-email 
+            - name: FRONTEND_URL 
+              valueFrom:
+                secretKeyRef:
+                  name: loco-secrets
+                  key: frontend-url 
           resources:
             requests:
               memory: "128Mi"
