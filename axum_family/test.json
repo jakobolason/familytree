@@ -1,0 +1,297 @@
+
+Generated D3 Tree: [
+  D3Node { person: Person { generation: -1, name: "Jens Peter Wistoft", birthdate: "1863-1950", last_name: "", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: Some(Person { generation: -1, name: "Jacobine f. Øvlesen", birthdate: "1865-1922", last_name: "", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }), children: [D3Node { person: Person { generation: 0, name: "Julius Sevald", birthdate: "1898 -1969", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }, partner: Some(Person { generation: 0, name: " ~ Inge", birthdate: "1929 - 2002", last_name: "f. Nielsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }), children: [D3Node { person: Person { generation: 1, name: "*Jens ", birthdate: "10.11.1959", last_name: "Wistoft", address: "Aabenraavej 22A, Kiskelund", city: "6340 Kruså", landline: "74 67 14 34", mobile_number: "20 13 36 99", email: "jens@mulsmark.dk"
+            }, partner: None, children: []
+          }
+        ]
+      }, D3Node { person: Person { generation: 0, name: "Karen", birthdate: "1896 - 1992", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }, partner: None, children: []
+      }, D3Node { person: Person { generation: 0, name: "Jenny Nikoline Kr.", birthdate: "1893 - 1976", last_name: "f. Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }, partner: Some(Person { generation: 0, name: " ~ Jens Marinus ", birthdate: "1880 - 1963", last_name: "Larsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }), children: [D3Node { person: Person { generation: 1, name: "* Knud", birthdate: "1934 - 2019", last_name: "Wistoft Larsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: Some(Person { generation: 0, name: " ~Anne-Grethe", birthdate: "20.09.1945", last_name: "f. Jørgensen", address: "Krokusvænget 9", city: "5450 Otterup", landline: "", mobile_number: "30 70 01 58", email: "agwl@mail.dk"
+            }), children: [D3Node { person: Person { generation: 2, name: "** Charlotte", birthdate: "11.11.1967", last_name: "Wistoft ", address: "Lærkevej 9", city: "5450 Otterup", landline: "", mobile_number: "26 23 17 50", email: "cw5450@hotmail.dk"
+                }, partner: None, children: [D3Node { person: Person { generation: 3, name: "*** Frederik", birthdate: "02.10.2003", last_name: "Wistoft Nielsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Nicoline", birthdate: "10.06.2000", last_name: "Wistoft Nielsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Jens Peter ", birthdate: "18.06.1971", last_name: "Wistoft Larsen", address: "Lindøvej 40 til 24, Lindø", city: "5450 Otterup", landline: "64 87 29 28", mobile_number: "51 22 52 62", email: "wistoft.larsen@smilemail.dk "
+                }, partner: None, children: [D3Node { person: Person { generation: 3, name: "*** Mads", birthdate: "12.11.2007", last_name: "Vanggård Wistoft Larsen", address: "Lindøvej 40 til 24, Lindø", city: "5450 Otterup", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Emma", birthdate: "22.07.2005", last_name: "Vanggård Wistoft Larsen", address: "Nørrevænget ", city: "5450 Otterup", landline: "", mobile_number: "21 72 70 30", email: ""
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Emil", birthdate: "11.10.2002", last_name: "Vanggård Wistoft Larsen", address: "             - do -", city: "5450 Otterup", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }
+                ]
+              }
+            ]
+          }, D3Node { person: Person { generation: 1, name: "* Agnethe ", birthdate: "16.08.1932", last_name: "Wistoft Larsen", address: "Erantisvej 12", city: "4900 Nakskov", landline: "54 92 32 14", mobile_number: "", email: ""
+            }, partner: None, children: []
+          }, D3Node { person: Person { generation: 1, name: "* Jens Anker", birthdate: "1929 - 2023", last_name: "Wistoft Larsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: Some(Person { generation: 0, name: " ~ Agnethe (Nethe)", birthdate: "11.03.1934", last_name: "f. Nielsen", address: "Brockdorff Allé 42 ", city: "5390 Martofte", landline: "", mobile_number: "", email: "agnetewl@mail.dk"
+            }), children: [D3Node { person: Person { generation: 2, name: "** Morten", birthdate: "06.08.1962", last_name: "Wistoft Larsen", address: "Søvertorpvej 4, Søvertorp", city: "5900 Rudkøbing", landline: "62 50 11 64", mobile_number: "", email: ""
+                }, partner: Some(Person { generation: 0, name: " ~ Lene", birthdate: "", last_name: "f. Særkjær", address: "", city: "", landline: "", mobile_number: "", email: ""
+                }), children: [D3Node { person: Person { generation: 3, name: "*** Peter", birthdate: "22.04.2003", last_name: "Wistoft Larsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Laura", birthdate: "27.06.2001", last_name: "Wistoft Larsen", address: "", city: "Aarhus", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Claus ", birthdate: "12.07.1959", last_name: "Wistoft ", address: "Ørnevænget 10", city: "8560 Kolind", landline: "65 34 11 92", mobile_number: "86 39 14 14", email: ""
+                }, partner: None, children: [D3Node { person: Person { generation: 3, name: "*** Caroline", birthdate: "27.01.1992", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }, partner: Some(Person { generation: 0, name: "2. ~ Karin", birthdate: "", last_name: "f. Plagberg", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }), children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Mathilde", birthdate: "07.09.1990", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Søren ", birthdate: "02.12.1957", last_name: "Wistoft Larsen", address: "Brockdorff Allé 44", city: "5390 Martofte", landline: "", mobile_number: "65 34 11 66", email: ""
+                }, partner: None, children: []
+              }
+            ]
+          }
+        ]
+      }, D3Node { person: Person { generation: 0, name: "Anton Christian ", birthdate: "1891-1959", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }, partner: Some(Person { generation: 0, name: " ~ Elna Christina", birthdate: "1896-1972", last_name: "f. Ebbesen", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }), children: [D3Node { person: Person { generation: 1, name: "* Hans Christian", birthdate: "1934 - 2022", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: None, children: [D3Node { person: Person { generation: 2, name: "** Annette", birthdate: "27.12.1956", last_name: "Wistoft", address: "Gl. Køge Landevej 725,A", city: "2660 Brøndby strand", landline: "", mobile_number: "22 86 36 01", email: "thola@mail.com"
+                }, partner: Some(Person { generation: 0, name: " ~ Thorkil", birthdate: "26.07.1944", last_name: "Langgaard", address: "              - do -", city: "", landline: "", mobile_number: "", email: "thola@mail.com"
+                }), children: [D3Node { person: Person { generation: 3, name: "*** Siri", birthdate: "03.01.1993", last_name: "Wistoft", address: "Theklavej 41, 3-42", city: "2400 Kbh NV", landline: "", mobile_number: "31 66 36 01", email: "siri_wistoft@hotmail.com"
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Freja", birthdate: "26.02.1990", last_name: "Langgaard", address: "Plejlstien 12", city: "4030 Tune", landline: "", mobile_number: "27 58 36 01", email: "frejalanggaard@hotmail.com"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "****Wilton", birthdate: "17.09.2021", last_name: "Bayer Langgaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "****Melvin", birthdate: "13.09.2018", last_name: "Bayer Langgaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Sverre", birthdate: "30.04.1985", last_name: "Langgaard", address: "Skoleparken 17", city: "3600 Frederikssund", landline: "", mobile_number: "61 79 36 01", email: "langgaardsverre@hotmail.com"
+                    }, partner: Some(Person { generation: 0, name: " ~ Claudia", birthdate: "10.10.1984", last_name: "f. Augsburg", address: "              - do -", city: "", landline: "", mobile_number: "", email: ""
+                    }), children: [D3Node { person: Person { generation: 4, name: "****Livia Augsburg", birthdate: "21.02.2022", last_name: "Langgaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "****Elia Augsburg", birthdate: "10.02.2018", last_name: "Langgaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "****Norr Augsburg", birthdate: "22.12.2014", last_name: "Langgaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Pilou Augsburg", birthdate: "16.11.2011", last_name: "Langgaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Thoke", birthdate: "28.02.1982", last_name: "Wistoft", address: "Elmedalen 17", city: "3540 Lynge", landline: "", mobile_number: "22 42 36 01", email: "thokew@gmail.com"
+                    }, partner: Some(Person { generation: 0, name: " ~ Trine ", birthdate: "08.01.1982", last_name: "f. Apitz", address: "              - do -", city: "", landline: "", mobile_number: "", email: ""
+                    }), children: [D3Node { person: Person { generation: 4, name: "**** Mikkel", birthdate: "19.04.2012", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Rune", birthdate: "05.04.2009", last_name: "Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }, D3Node { person: Person { generation: 1, name: "* Karen Margrethe", birthdate: "1925-2023", last_name: "f. Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: Some(Person { generation: 0, name: " ~ Ivar", birthdate: "1917-2001", last_name: "Vestergaard", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }), children: [D3Node { person: Person { generation: 2, name: "** Bodil Wistoft", birthdate: "07.10.1960", last_name: "Vestergaard", address: "Drammelstrupvej 126, Balle", city: "8300 Odder", landline: "86 54 37 22", mobile_number: "22 49 24 60 ", email: "bw.vestergaard@gmail.com"
+                }, partner: Some(Person { generation: 0, name: " ~ Olí ", birthdate: "01.06.1963", last_name: "Thorgeirson", address: "", city: "", landline: "", mobile_number: "40 94 37 22", email: "olidram@gmail.com"
+                }), children: [D3Node { person: Person { generation: 3, name: "***Jakob Vestergaard    ", birthdate: "28.02.2003", last_name: "Olason", address: "Helsingforsgade 19 1. L3", city: "8200 Aarhus N", landline: "", mobile_number: "23 64 31 73", email: "jakobolason@gmail.com"
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Anna Vestergaard       ", birthdate: "08.08.1995", last_name: "Oladottir", address: "Nørregade 22A", city: "8300 Odder", landline: "", mobile_number: "91 25 18 02", email: "annavesterstgaard@gmail.com"
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Tomas Vestergaard      ", birthdate: "30.03.1992", last_name: "Olason", address: "Tanderup Hovedgade 19", city: "Tanderup, 8305 Samsø", landline: "", mobile_number: "91 82 63 62", email: "iserkoldt@gmail.com"
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Ulla Wistoft", birthdate: "19.11.1957", last_name: "Vestergaard", address: "postadr. Drammelstrupvej 126", city: "8300 Odder", landline: "", mobile_number: "29 66 22 91", email: "ullawisve@hotmail.com"
+                }, partner: None, children: [D3Node { person: Person { generation: 3, name: "*** Christoffer", birthdate: "24.04.1988", last_name: "Vestergaard - Larsen", address: "Ryvej 63", city: "8752 Østbirk", landline: "", mobile_number: "28 59 85 25", email: "cv_larsen@hotmail.com"
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Inge Wistoft", birthdate: "07.01.1954", last_name: "Vestergaard", address: "Hasselvej 8, Salten", city: "8653 Them", landline: "98 92 01 74", mobile_number: "40 43 32 87", email: "in.wi.gaard@gmail.com"
+                }, partner: None, children: [D3Node { person: Person { generation: 3, name: "*** Bitten ", birthdate: "16.03.1985", last_name: "Wistoft - Ibsen", address: "Røllikevej 5B", city: "8654 Them", landline: "", mobile_number: "42 77 76 97", email: "bitten@wistoft-ibsen.dk"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "**** Kaya", birthdate: "10.05.15", last_name: "Wistoft - Christensen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Casper", birthdate: "18.10.12", last_name: "Wistoft - Christensen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Mikael", birthdate: "12.04.1983", last_name: "Wistoft - Ibsen", address: "", city: "Brøndby", landline: "", mobile_number: "60 87 47 32", email: "mikael@wistoft-ibsen.dk"
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Morten", birthdate: "21.07.1980", last_name: "Wistoft - Ibsen", address: "Rødkløvervej 12, Kølkær", city: "7400 Herning", landline: "", mobile_number: "20 46 19 46", email: "morten@wistoft-ibsen.dk"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "**** Jonathan", birthdate: "04.04.2013", last_name: "Wistoft - Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Nikolaj", birthdate: "31.10.2010", last_name: "Wistoft - Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Patrick", birthdate: "24.08.2007", last_name: "Wistoft - Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Troels ", birthdate: "09.12.1977", last_name: "Wistoft - Ibsen", address: "Tjørnevej 24", city: "8752 Østbirk", landline: "", mobile_number: "99 55 65 78", email: "trowi09@gmail.com"
+                    }, partner: Some(Person { generation: 0, name: " ~ Rikke", birthdate: "17.12.1977", last_name: "f.", address: "", city: "", landline: "", mobile_number: "23 80 90 56", email: ""
+                    }), children: [D3Node { person: Person { generation: 4, name: "**** William", birthdate: "09.10.2009", last_name: "Wistoft - Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Frederik", birthdate: "25.06.2007", last_name: "Wistoft - Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Christian   ", birthdate: "03.03.2005", last_name: "Wistoft - Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Lisbeth Wistoft", birthdate: "28.01.1951", last_name: "f. Vestergaard", address: "Brahesborgvænget 1", city: "5610 Assens", landline: "", mobile_number: "20 95 60 44", email: "liwimu@gmail.com"
+                }, partner: Some(Person { generation: 0, name: " ~ Terry", birthdate: "1947-1994", last_name: "Mumford", address: "", city: "", landline: "", mobile_number: "", email: ""
+                }), children: [D3Node { person: Person { generation: 3, name: "*** Tom", birthdate: "11.02.1981", last_name: "Mumford", address: "Honningbivænget 3, v.17", city: "5260 Odense S", landline: "", mobile_number: "20 84 37 20", email: "tommumford@jubii.dk"
+                    }, partner: None, children: []
+                  }, D3Node { person: Person { generation: 3, name: "*** Lise Wistoft", birthdate: "30.04.1976", last_name: "f. Mumford", address: "Nordvej 29", city: "3000 Helsingør", landline: "", mobile_number: "30 14 27 69", email: "l.briey@gmail.com"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "**** Silke Wistoft", birthdate: "13.03.2008", last_name: "Thomsen", address: "Nordvej 29", city: "3000 Helsingør", landline: "", mobile_number: "60 53 38 21", email: "silkethomsen@gmail.com"
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Sabine Wistoft", birthdate: "05.07.2006", last_name: "Thomsen", address: "Nordvej 29", city: "3000 Helsingør", landline: "", mobile_number: "60 53 38 31", email: "sabinewistoft@gmail.com"
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Joe", birthdate: "05.12.1973", last_name: "Mumford", address: "Nr. Økse Engvej 59", city: "9460 Brovst", landline: "", mobile_number: "22 1021 09", email: "joemumford73@gmail.com"
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Kirsten Wistoft", birthdate: "13.04.1949", last_name: "f. Vestergaard", address: "Frederiksborgvej 30A 1.tv", city: "3520 Farum", landline: "", mobile_number: "29 13 39 18", email: "kiwisch@live.dk"
+                }, partner: Some(Person { generation: 0, name: " ~ Jørgen Peter", birthdate: "1940 - 2020", last_name: "Schumacher", address: "", city: "", landline: "", mobile_number: "", email: ""
+                }), children: [D3Node { person: Person { generation: 3, name: "*** Louise V", birthdate: "16.11.1979", last_name: "Schumacher", address: "", city: "Veracruz Mexico", landline: "", mobile_number: "27 28 36 27", email: "louisesch@hotmail.com"
+                    }, partner: Some(Person { generation: 0, name: " ~ Thomas", birthdate: "06.03.1975", last_name: "Ottosen", address: "", city: "          - do -", landline: "", mobile_number: "", email: ""
+                    }), children: [D3Node { person: Person { generation: 4, name: "**** Christine", birthdate: "06.07.2016", last_name: "Schumacher Ottosen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Rasmus", birthdate: "18.04.2015", last_name: "Schumacher Ottosen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Pernille S V", birthdate: "12.02.1975", last_name: "Schumacher", address: "Sømosevej 6", city: "4990 Sakskøbing", landline: "", mobile_number: "40 31 64 46", email: "schumacherpernille@gmail.com"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "**** Veronica Wistoft   ", birthdate: "13.07.2002", last_name: "Erdmann", address: "", city: "", landline: "", mobile_number: "20 85 08 26", email: "nalaogkroelle@hotmail.com"
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: "** Margrethe Wistoft", birthdate: "26.01.1947", last_name: "f. Vestergaard", address: "Rødding Nørregade 17", city: "6630 Rødding", landline: "", mobile_number: "30 74 06 67", email: "mkemborg@gmail.com"
+                }, partner: Some(Person { generation: 0, name: "1. ~ Kaj", birthdate: "1946 - 2023", last_name: "Emborg", address: "", city: "", landline: "", mobile_number: "", email: ""
+                }), children: [D3Node { person: Person { generation: 3, name: "*** Malene", birthdate: "07.03.1983", last_name: "Emborg Andersen", address: "Kirkevej 25", city: "6623 Vorbasse", landline: "", mobile_number: "30 28 07 30", email: "mea7913@gmail.com"
+                    }, partner: Some(Person { generation: 0, name: " ~ Michael", birthdate: "30.03.1982", last_name: "Andersen", address: "", city: "", landline: "", mobile_number: "31 24 10 02", email: ""
+                    }), children: [D3Node { person: Person { generation: 4, name: "****Ella Marie", birthdate: "10.05.2016", last_name: "Emborg Andersen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Toke Klemen", birthdate: "17.03.2014", last_name: "Emborg Andersen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Mette ", birthdate: "23.04.1978", last_name: "Emborg Lassen", address: "Klokkehøj 10", city: "6630 Rødding", landline: "", mobile_number: "61 61 44 85", email: "memail@bbsyd.dk"
+                    }, partner: Some(Person { generation: 0, name: " ~ Søren", birthdate: "13.06.1967", last_name: "Lassen", address: "  -do-", city: "", landline: "74 82 00 63", mobile_number: "22 44 29 92", email: "sdlassen@bbsyd.dk"
+                    }), children: [D3Node { person: Person { generation: 4, name: "**** Ingrid ", birthdate: "05.08.2013", last_name: "Emborg Lassen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Daniel", birthdate: "12.07.2009", last_name: "Emborg Lassen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Karin", birthdate: "13.01.1973", last_name: "Emborg Andreasen", address: "Østergade 45", city: "6630 Rødding", landline: "74 84 26 60 ", mobile_number: "61 61 52 26", email: "karin.e.andreasen@gmail.com"
+                    }, partner: Some(Person { generation: 0, name: " ~ Klaus", birthdate: "23.06.1966", last_name: "Andreasen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                    }), children: [D3Node { person: Person { generation: 4, name: "**** Philip       ", birthdate: "20.06.2005", last_name: "Andreasen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Mads       ", birthdate: "07.08.1999", last_name: "Andreasen", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Rebecca    ", birthdate: "22.02.1997", last_name: "Andreasen", address: "Brombærvænget 9, Vonsild", city: "6000 Kolding", landline: "", mobile_number: "20 62 65 17", email: "rebecca.ea97@gmail.com"
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: "*** Klaus ", birthdate: "28.02.1971", last_name: "Emborg", address: "Ågade 25, Bredstrup", city: "7000 Frdericia", landline: "", mobile_number: "24 60 20 10", email: "klausemborg@yahoo.dk"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "**** Mikkel", birthdate: "09.10.2006", last_name: "Emborg", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Kasper     ", birthdate: "07.05.2005", last_name: "Emborg", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Kamilla  ", birthdate: "14.07.2001", last_name: "Emborg", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }, D3Node { person: Person { generation: 4, name: "**** Michael   ", birthdate: "27.11.1998", last_name: "Emborg", address: "", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }, D3Node { person: Person { generation: 0, name: "Laura Mathilde", birthdate: "1890 - 1957", last_name: "f. Wistoft", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }, partner: Some(Person { generation: 0, name: " ~ Hans Christian O.", birthdate: "1896 - 1959", last_name: "Iskov", address: "", city: "", landline: "", mobile_number: "", email: ""
+        }), children: [D3Node { person: Person { generation: 1, name: "* Karen ", birthdate: "1927 - 2018", last_name: "Nielsen, f. Iskov", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: None, children: [D3Node { person: Person { generation: 2, name: " ** Anne Mathilde", birthdate: "15.01.1967", last_name: "Iskov", address: "\"Tornhøjgård\", Boulevarden 13", city: "9000 Aalborg", landline: "", mobile_number: "", email: ""
+                }, partner: None, children: []
+              }
+            ]
+          }, D3Node { person: Person { generation: 1, name: "* Jakob Oluf", birthdate: "1927 - 2009", last_name: "Iskov", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: Some(Person { generation: 0, name: " ~ Ulla Margrethe", birthdate: "1937 - 1984", last_name: "f. Koch", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }), children: [D3Node { person: Person { generation: 2, name: " ** Hans Christian", birthdate: "08.05.1964", last_name: "Iskov", address: "Fredmosevej 15, Sædballe", city: "5932 Humble", landline: "", mobile_number: "21 66 17 93", email: "hc@iskov.eu"
+                }, partner: Some(Person { generation: 0, name: " ~ Tove Bang", birthdate: "16.02.1968", last_name: "Iskov", address: "            do", city: "", landline: "", mobile_number: "21 65 19 63", email: "tove@iskov.eu"
+                }), children: [D3Node { person: Person { generation: 3, name: " *** Matias Bang", birthdate: "01.05.1996", last_name: "Iskov", address: "Dragebakken 142", city: "5250 Odense", landline: "", mobile_number: "40 18 11 11", email: "matias-iskov@hotmail.com"
+                    }, partner: None, children: [D3Node { person: Person { generation: 4, name: "**** Lauge", birthdate: "10.10.2023", last_name: "Iskov", address: "           do ", city: "", landline: "", mobile_number: "", email: ""
+                        }, partner: None, children: []
+                      }
+                    ]
+                  }, D3Node { person: Person { generation: 3, name: " *** Katrine Bang", birthdate: "27.07.1993", last_name: "Iskov", address: "Illebøllevej 27", city: "5900 Rudkøbing", landline: "", mobile_number: "29 78 34 41", email: "katrine-iskov@hotmail.com"
+                    }, partner: None, children: []
+                  }
+                ]
+              }, D3Node { person: Person { generation: 2, name: " ** Anne Birgitte", birthdate: "20.11.1961", last_name: "Iskov", address: "Jensløvsvej 16, 3. tv", city: "2920 Charlottenlund", landline: "", mobile_number: "21 73 93 02", email: "birgitte-i@hotmail.com"
+                }, partner: None, children: []
+              }
+            ]
+          }, D3Node { person: Person { generation: 1, name: "* Erik", birthdate: "1924 - 2010", last_name: "Iskov", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }, partner: Some(Person { generation: 0, name: " ~ Birgit?", birthdate: "?", last_name: "", address: "", city: "", landline: "", mobile_number: "", email: ""
+            }), children: [D3Node { person: Person { generation: 2, name: " ** Jakob Christian", birthdate: "1966", last_name: "Iskov", address: "?", city: "Australien", landline: "", mobile_number: "?", email: ""
+                }, partner: None, children: []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }, D3Node { person: Person { generation: 0, name: " - Klaus", birthdate: "16.08.1988", last_name: "Elian", address: "            do", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: " - Louise", birthdate: "14.07.1995", last_name: "Damgaard", address: "           do ", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: "2. -Willy", birthdate: "20.01.1947", last_name: "Holm", address: "Gefionvænget 2", city: "5610 Assens", landline: "", mobile_number: "41 41 37 40", email: "gefion2@mail.tele.dk"
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: "1. -/- Marianne", birthdate: "", last_name: "", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: "2. -/- Irina", birthdate: "20.06.1972", last_name: "f. Malakhova", address: "", city: "", landline: "", mobile_number: "20 56 46 69", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: " - Teis", birthdate: "", last_name: "", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: " - - Oliver", birthdate: "11.12.2000", last_name: "Lassen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: " - Freja", birthdate: "08.07.2009", last_name: "Ottosen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Christian Briey", birthdate: "22.10.1973", last_name: "Thomsen", address: "Bøtterupvej 7, Bøtterup", city: "3100 Hornbæk", landline: "", mobile_number: "20 78 46 23", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Klaus", birthdate: "", last_name: "Ibsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Karina", birthdate: "21.10.1981", last_name: "f.", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Allan", birthdate: "14.11.1974", last_name: "Hamann Christensen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Viggo", birthdate: "", last_name: "Larsen", address: "Ryvej 63", city: "8752 Østbirk", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Britza", birthdate: "", last_name: "f. Skjold Christiansen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: " - Mikkel", birthdate: "12.05.1988", last_name: "Bayer Næstved", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: " - Andreas Willer", birthdate: "15.05.1991", last_name: "Jørgensen", address: " - do -", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: "1.-/- Karen", birthdate: "", last_name: "F. Christoffersen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/- Line", birthdate: "09.11.1972", last_name: "Vanggård", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }, D3Node { person: Person { generation: 0, name: ".-/-  Claus", birthdate: "", last_name: "Nielsen", address: "", city: "", landline: "", mobile_number: "", email: ""
+    }, partner: None, children: []
+  }
+]

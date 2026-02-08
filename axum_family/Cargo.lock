@@ -1280,9 +1280,9 @@ dependencies = [
 
 [[package]]
 name = "family_graph"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b157f76cdd16707d7079f5004197ce7936fc4a605fda5c75dc3e3a227131674"
+checksum = "682cc5dc61e832f087eeffca040d7888c9d8b0dbe82258f1047b43351b91a233"
 dependencies = [
  "calamine",
  "dotenv",
@@ -1308,6 +1308,7 @@ dependencies = [
  "loco-rs",
  "migration",
  "once_cell",
+ "petgraph",
  "regex",
  "rstest",
  "sea-orm",
@@ -3254,9 +3255,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.12.2"
+version = "1.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "843bc0191f75f3e22651ae5f1e72939ab2f72a4bc30fa80a066bd66edefc24d4"
+checksum = "e10754a14b9137dd7b1e3e5b0493cc9171fdd105e0ab477f51b72e7f3ac0e276"
 dependencies = [
  "aho-corasick",
  "memchr",

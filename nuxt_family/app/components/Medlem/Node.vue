@@ -7,11 +7,12 @@ const status = ref('idle'); // 'idle' | 'pending' | 'success' | 'error'
 // 2. Define a manual fetch function that TAKES the ID
 const fetchMember = async (id: string) => {
   status.value = 'pending';
-  memberDetails.value = null; // Clear old data immediately
+  memberDetails.value = null;
 
   try {
     const data = await $fetch(`/api/medlem/${id}`);
     memberDetails.value = data;
+    console.log('got medlem data: ', data)
     status.value = 'success';
   } catch (err) {
     console.error(err);
@@ -19,10 +20,12 @@ const fetchMember = async (id: string) => {
   }
 };
 watch([isOpen, nodeData], ([newOpen, newNodeData]) => {
-  // Only fetch if the slideover is OPEN and we actually have a NODE with a PID
   if (newOpen && newNodeData?.pid) {
     console.log('Conditions met. Fetching data for:', newNodeData.pid);
     fetchMember(newNodeData.pid);
+  } else if (!newOpen) {
+    // When closed, values should be set to null
+    memberDetails.value = null;
   }
 });
 </script>

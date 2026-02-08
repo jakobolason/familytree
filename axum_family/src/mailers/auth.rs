@@ -66,17 +66,21 @@ impl AuthMailer {
             .and_then(|s| s.get("from_email"))
             .and_then(|v| v.as_str())
             .map(|s| s.to_string());
+        tracing::debug!(
+            "Sending magic link email to {} from {:?}",
+            user.email,
+            from_email
+        );
         Self::mail_template(
             ctx,
             &MAGIC_LINK,
             mailer::Args {
-                // from: Some("bot@jakobolason.dk".to_string()),
                 from: from_email,
                 to: user.email.to_string(),
                 locals: json!({
                   "name": user.name,
                   "token": user.magic_link_token.clone().ok_or_else(|| Error::string(
-                            "the user model not contains magic link token",
+                            "the user model does not contains magic link token",
                     ))?,
                   "host": frontend_url
                 }),

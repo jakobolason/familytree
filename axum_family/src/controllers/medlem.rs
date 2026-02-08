@@ -43,7 +43,7 @@ async fn change_fields(
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct MedlemResponse {
+pub struct MedlemResponseData {
     pub name: String,
     pub email: Option<String>,
     pub phone_nr: Option<String>,
@@ -51,15 +51,21 @@ pub struct MedlemResponse {
     pub city: Option<String>,
     pub birthdate: Option<NaiveDate>,
     pub final_date: Option<NaiveDate>,
-    pub status: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MedlemResponse {
+    pub medlem: MedlemResponseData,
     // Relationship fields
     pub parents_pid: Option<serde_json::Value>,
     pub children_pid: Option<serde_json::Value>,
     pub partner_pid: Option<Uuid>,
+    pub partner: Option<MedlemResponseData>,
     pub previous_partners: Option<serde_json::Value>,
 }
 
-impl From<medlem::Model> for MedlemResponse {
+impl From<medlem::Model> for MedlemResponseData {
     fn from(model: medlem::Model) -> Self {
         Self {
             name: model.name,
@@ -69,11 +75,19 @@ impl From<medlem::Model> for MedlemResponse {
             city: model.city,
             birthdate: model.birthdate,
             final_date: model.final_date,
-            status: model.status,
-            parents_pid: model.parents_pid,
-            children_pid: model.children_pid,
-            partner_pid: model.partner_pid,
-            previous_partners: model.previous_partners,
+        }
+    }
+}
+
+impl From<(medlem::Model, Option<MedlemResponseData>)> for MedlemResponse {
+    fn from((medlem, partner): (medlem::Model, Option<MedlemResponseData>)) -> Self {
+        Self {
+            medlem: medlem.clone().into(),
+            parents_pid: None,  // TODO:
+            children_pid: None, // TODO:
+            partner_pid: medlem.partner_pid,
+            partner,
+            previous_partners: None, // TODO:
         }
     }
 }
@@ -83,15 +97,24 @@ async fn get_medlem(
     State(ctx): State<AppContext>,
     Path(token): Path<String>,
 ) -> Result<Response> {
-    tracing::info!("Fetching medlem profile for pid: {}", &token);
     let medlem = medlem::Model::find_by_pid(&ctx.db, &token).await;
-    match medlem {
-        Ok(medlem) => format::json(MedlemResponse::from(medlem)),
-        Err(_) => {
-            tracing::error!("Could not find medlem {:?}", &auth.claims);
-            unauthorized("Unauthorized session")
+    let medlem = match medlem {
+        Ok(medlem) => medlem,
+        Err(e) => {
+            tracing::error!("Could not find medlem {:?}, {:?}", &auth.claims, e);
+            return unauthorized("Unauthorized session");
         }
-    }
+    };
+    // If medlem has a partner_pid, fetch that also and send that together with the response
+    let partner: Option<MedlemResponseData> = match medlem.partner_pid {
+        Some(partner_pid) => Some(
+            medlem::Model::find_by_pid(&ctx.db, &partner_pid.to_string())
+                .await?
+                .into(),
+        ),
+        None => None,
+    };
+    format::json(MedlemResponse::from((medlem, partner)))
 }
 
 pub fn routes() -> Routes {

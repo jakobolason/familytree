@@ -13,8 +13,6 @@ const { openProfile } = useProfile()
       </template>
       <template #right>
         <!--<UColorModeButton />-->
-        <UButton to="https://github.com/jakobolason/familytree" target="_blank" icon="i-simple-icons-github"
-          aria-label="GitHub" color="neutral" variant="ghost" />
         <!-- The following is for the profile page -->
         <div v-if="!loggedIn">
           <NuxtLink to="/login">
@@ -41,8 +39,8 @@ const { openProfile } = useProfile()
         </p>
       </template>
       <template #right>
-        <UButton to="https://github.com/jakobolason" target="_blank" icon="i-simple-icons-github" aria-label="GitHub"
-          color="neutral" variant="ghost" />
+        <UButton to="https://github.com/jakobolason/familytree" target="_blank" icon="i-simple-icons-github"
+          aria-label="GitHub" color="neutral" variant="ghost" />
       </template>
     </UFooter>
 

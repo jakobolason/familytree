@@ -56,6 +56,7 @@ async fn magic_link(
         tracing::debug!(email = params.email, "user not found by email");
         return format::empty_json();
     };
+    tracing::debug!("user found by email: {}", user.email);
 
     let user = user.into_active_model().create_magic_link(&ctx.db).await?;
     AuthMailer::send_magic_link(&ctx, &user).await?;
