@@ -30,8 +30,9 @@ async fn change_fields(
         );
         return unauthorized("You cannot edit this user");
     }
-    // let user = user::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
-    let medlem = medlem::Model::find_by_pid(&ctx.db, &params.medlem_pid)
+    let medlem_uuid =
+        Uuid::parse_str(&params.medlem_pid).map_err(|_| ModelError::EntityNotFound)?;
+    let medlem = medlem::Model::find_by_pid(&ctx.db, medlem_uuid)
         .await?
         .into_active_model();
 
@@ -93,22 +94,23 @@ impl From<(medlem::Model, Option<MedlemResponseData>)> for MedlemResponse {
 }
 
 async fn get_medlem(
-    auth: auth::JWT,
+    _auth: auth::JWT,
     State(ctx): State<AppContext>,
     Path(token): Path<String>,
 ) -> Result<Response> {
-    let medlem = medlem::Model::find_by_pid(&ctx.db, &token).await;
+    let pid_uuid = Uuid::parse_str(&token).map_err(|_| ModelError::EntityNotFound)?;
+    let medlem = medlem::Model::find_by_pid(&ctx.db, pid_uuid).await;
     let medlem = match medlem {
         Ok(medlem) => medlem,
         Err(e) => {
-            tracing::error!("Could not find medlem {:?}, {:?}", &auth.claims, e);
+            tracing::error!("Could not find medlem {:?}, {:?}", &token, e);
             return unauthorized("Unauthorized session");
         }
     };
     // If medlem has a partner_pid, fetch that also and send that together with the response
     let partner: Option<MedlemResponseData> = match medlem.partner_pid {
         Some(partner_pid) => Some(
-            medlem::Model::find_by_pid(&ctx.db, &partner_pid.to_string())
+            medlem::Model::find_by_pid(&ctx.db, partner_pid)
                 .await?
                 .into(),
         ),

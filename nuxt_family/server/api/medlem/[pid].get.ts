@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event) => {
+  console.log('in get medlem')
   const pid = getRouterParam(event, 'pid') as string
   if (!pid) {
     throw createError({ statusCode: 400, statusMessage: 'No pid provided' })
@@ -11,6 +12,7 @@ export default defineEventHandler(async (event) => {
   }
   const config = useRuntimeConfig()
 
+  console.log(`Fetching medlem with pid: ${pid} using token: ${sessionToken}`)
   try {
     const medlem = await $fetch(`${config.authOrigin}/api/medlem/${pid}`, {
       headers: {
@@ -18,6 +20,7 @@ export default defineEventHandler(async (event) => {
       }
     })
 
+    console.log('received medlem:', medlem)
     return medlem
   } catch (error: any) {
     console.error('Error fetching medlem:', error)

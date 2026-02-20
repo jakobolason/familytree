@@ -31,6 +31,13 @@ export default defineNuxtConfig({
       apiEndpoint: process.env.AUTH_ORIGIN
     }
   },
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon2.png' },
+      ]
+    }
+  },
 
   // auth: {
   //   isEnabled: true,

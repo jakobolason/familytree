@@ -19,15 +19,18 @@ const fetchMember = async (id: string) => {
     status.value = 'error';
   }
 };
-watch([isOpen, nodeData], ([newOpen, newNodeData]) => {
-  if (newOpen && newNodeData?.pid) {
-    console.log('Conditions met. Fetching data for:', newNodeData.pid);
-    fetchMember(newNodeData.pid);
-  } else if (!newOpen) {
-    // When closed, values should be set to null
-    memberDetails.value = null;
-  }
-});
+onMounted(() => {
+  watch([isOpen, nodeData], ([newOpen, newNodeData]) => {
+    if (newOpen && newNodeData?.pid) {
+      console.log('Conditions met. Fetching data for:', newNodeData.pid);
+      fetchMember(newNodeData.pid);
+    } else if (!newOpen) {
+      // When closed, values should be set to null
+      memberDetails.value = null;
+    }
+  });
+})
+
 </script>
 
 <template>

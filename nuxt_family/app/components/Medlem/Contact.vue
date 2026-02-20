@@ -28,6 +28,7 @@ const getAge = () => {
   if (!birthdate) return null;
   const birth = new Date(birthdate);
   const finalDate = props.medlem.finalDate
+  console.log('birthdate', birthdate);
   console.log('finalDate', finalDate);
   const end = finalDate ? new Date(finalDate) : new Date();
 
