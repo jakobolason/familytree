@@ -18,6 +18,17 @@ interface MemberResponse {
 const props = defineProps<{
   member: MemberResponse
 }>();
+
+const partnerLabel = computed(() => {
+  if (!props.member.partner) return 'Partner';
+
+  if (props.member.partner.finalDate) {
+    return 'Afdød partner';
+  }
+
+  return 'Partner';
+});
+
 </script>
 
 <template>
@@ -32,7 +43,7 @@ const props = defineProps<{
 
           <UCard :ui="{ body: { padding: 'p-3' } }" class="col-span-2">
             <div>
-              <span class="text-xs text-gray-500 uppercase">Nuværende Partner</span>
+              <span class="text-xs text-gray-500 uppercase">{{ partnerLabel }}</span>
               <MedlemContact :medlem="member.partner" />
             </div>
           </UCard>
