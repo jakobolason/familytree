@@ -1,6 +1,6 @@
 use crate::{
     models::_entities::user,
-    views::auth::{LoginMethods, LoginResponse, PasswordLoginParams, SessionResponse},
+    views::auth::{LoginMethods, LoginResponse, SessionResponse},
 };
 use loco_rs::{auth::jwt, hash, prelude::*};
 
@@ -34,8 +34,7 @@ async fn login(
                 return unauthorized("unauthorized!");
             };
 
-            let user = user.into_active_model().clear_magic_link(&ctx.db).await?;
-            user
+            user.into_active_model().clear_magic_link(&ctx.db).await?
         }
     };
 

@@ -33,8 +33,8 @@ impl Task for SeedUser {
 
         let user = user::ActiveModel {
             pid: Set(Uuid::new_v4()),
-            name: Set(username.clone()),
-            email: Set(username.clone()),
+            name: Set(username.to_string()),
+            email: Set(username.to_string()),
             password: Set(hashed_password),
             api_key: Set(format!("key-{}", Uuid::new_v4())),
             ..Default::default()

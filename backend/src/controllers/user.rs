@@ -26,10 +26,10 @@ async fn get_authorized_medlem_pid(
 
 async fn get_tree(_auth: auth::JWT, State(_ctx): State<AppContext>) -> Result<Response> {
     // tracing::error!("GUARDED ACCESS TO FAMILY TREE DATA: {:?}", _auth.claims);
-    if let Ok(cache) = FAMILY_TREE_CACHE.read() {
-        if let Some(ref data) = *cache {
-            return format::json(serde_json::json!(data.clone()));
-        }
+    if let Ok(cache) = FAMILY_TREE_CACHE.read()
+        && let Some(ref data) = *cache
+    {
+        return format::json(serde_json::json!(data.clone()));
     }
     Err(loco_rs::Error::Message(
         "Family tree data not available".to_string(),

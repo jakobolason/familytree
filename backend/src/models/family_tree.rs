@@ -1,8 +1,8 @@
 pub use super::_entities::family_tree::{ActiveModel, Column, Entity, Model};
 use loco_rs::prelude::Set;
 use once_cell::sync::Lazy;
-use sea_orm::entity::prelude::*;
 use sea_orm::QueryOrder;
+use sea_orm::entity::prelude::*;
 use serde_json::Value;
 use std::sync::{Arc, RwLock};
 
@@ -67,11 +67,11 @@ impl Entity {
         let latest = Self::retrieve_latest(db).await?;
 
         if let Some(model) = latest {
-            if let Some(data) = model.tree_data {
-                if let Ok(mut cache) = FAMILY_TREE_CACHE.write() {
-                    *cache = Some(data);
-                    tracing::info!("Family tree loaded from db into cache")
-                }
+            if let Some(data) = model.tree_data
+                && let Ok(mut cache) = FAMILY_TREE_CACHE.write()
+            {
+                *cache = Some(data);
+                tracing::info!("Family tree loaded from db into cache")
             }
         } else {
             tracing::warn!("No failmy tree data found in db to cache");

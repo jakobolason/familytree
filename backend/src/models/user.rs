@@ -8,7 +8,7 @@ use loco_rs::{
     model::{Authenticable, ModelError, ModelResult},
     prelude::model,
 };
-use sea_orm::{entity::prelude::*, ActiveValue};
+use sea_orm::{ActiveValue, entity::prelude::*};
 use serde_json::Map;
 
 pub const MAGIC_LINK_LENGTH: i8 = 32;
@@ -182,7 +182,7 @@ impl ActiveModel {
         let expired = Utc::now().naive_utc() + Duration::minutes(MAGIC_LINK_EXPIRATION_MIN.into());
 
         self.magic_link_token = ActiveValue::set(Some(random_str));
-        self.magic_link_token_expiration = ActiveValue::set(Some(expired.into()));
+        self.magic_link_token_expiration = ActiveValue::set(Some(expired));
         self.update(db).await.map_err(ModelError::from)
     }
 
