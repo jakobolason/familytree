@@ -3,11 +3,12 @@ use crate::models::{
 };
 use chrono::{NaiveDate, Utc};
 use family_graph::{
+    Relationship,
     family_graph::{FamilyGraph, Person},
-    run_grapher, Relationship,
+    run_grapher,
 };
 use loco_rs::{hash, prelude::*};
-use petgraph::{graph::NodeIndex, visit::EdgeRef, Direction};
+use petgraph::{Direction, graph::NodeIndex, visit::EdgeRef};
 use std::{collections::HashMap, path::Path};
 
 pub const RANDOM_PASSWD_LENGTH: i8 = 20;
@@ -233,7 +234,6 @@ async fn create_medlem(
     Ok(model)
 }
 
-#[allow(clippy::module_name_repetitions)]
 pub struct SeedTree;
 #[async_trait]
 impl Task for SeedTree {

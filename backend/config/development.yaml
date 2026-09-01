@@ -16,7 +16,6 @@ logger:
 
 # Web server configuration
 server:
-  
   # Port on which the server will listen. the server binding is 0.0.0.0:{PORT}
   port: 8086
   binding: "0.0.0.0"
@@ -71,11 +70,10 @@ server:
       max_age: 86400
     fallback:
       enable: false
-    
-settings:
-  frontend_url: {{ get_env(name="FRONTEND_URL", default="http://localhost:3000") }}
-  from_email: {{ get_env(name="FROM_EMAIL", default="bot@example.com") }}
 
+settings:
+  frontend_url: <%= get_env(name="FRONTEND_URL", default="http://localhost:3000") %>
+  from_email: <%= get_env(name="FROM_EMAIL", default="bot@example.com") %>
 
 mailer:
   # SMTP mailer configuration.
@@ -85,7 +83,7 @@ mailer:
     # SMTP server host. e.x localhost, smtp.gmail.com
     host: localhost
     # SMTP server port
-    port: 1025
+    port: 1035
     # Use secure connection (SSL/TLS).
     secure: false
 

@@ -1,8 +1,8 @@
 use loco_rs::{
+    Error, Result,
     app::AppContext,
     mailer::{self, Mailer},
-    prelude::{include_dir, Dir},
-    Error, Result,
+    prelude::{Dir, include_dir},
 };
 use serde_json::json;
 
@@ -19,7 +19,7 @@ impl AuthMailer {
     ///
     /// # Errors
     ///
-    ///When email sending is failed
+    ///When email sending fails
     pub async fn forgot_password(ctx: &AppContext, user: &user::Model) -> Result<()> {
         let frontend_url = ctx
             .config
@@ -58,7 +58,7 @@ impl AuthMailer {
             .as_ref()
             .and_then(|s| s.get("frontend_url"))
             .and_then(|v| v.as_str())
-            .unwrap_or("http://localhost:5173");
+            .unwrap_or("http://localhost:3000");
         let from_email = ctx
             .config
             .settings

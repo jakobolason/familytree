@@ -3,7 +3,7 @@ import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 const { fetch } = useUserSession();
 
-const toast = useToast()
+const toast = useToast();
 
 const schema = z.object({
   email: z.email("Invalid email"),
@@ -26,13 +26,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     //  password: event.data.password,
     //}, {callbackUrl: '/'});
 
-    let response = await $fetch('/api/auth/login', {
-      method: 'POST',
+    console.log("checking backend...");
+    let response = await $fetch("/api/auth/login", {
+      method: "POST",
       body: {
         email: event.data.email,
         password: event.data.password,
-      }
-    })
+      },
+    });
 
     if (!response?.ok) {
       toast.add({
@@ -41,17 +42,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         color: "error",
       });
     } else {
-      await fetch()
+      await fetch();
       toast.add({
         title: "Success",
         description: "You have been logged in successfully.",
         color: "success",
       });
-      await navigateTo('/');
+      await navigateTo("/");
     }
   } catch (error) {
     if (String(error).includes("FetchError")) {
-      console.error("Unauthorized credentials")
+      console.error("Unauthorized credentials");
       toast.add({
         title: "Authentication Failed",
         description: "Invalid email or password.",
@@ -63,7 +64,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: "An unexpected error occurred. Please try again.",
         color: "error",
       });
-      console.error('Login error:',);
+      console.error("Login error:");
       console.log(error);
     }
   }
@@ -83,6 +84,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     <UButton type="submit"> Log ind </UButton>
   </UForm>
-  <p> Første gang du logger ind?</p>
-  <UButton :to="{ name: 'magic-link' }"> Brug et magic link, og kom ind med din email </UButton>
+  <p>Første gang du logger ind?</p>
+  <UButton :to="{ name: 'magic-link' }">
+    Brug et magic link, og kom ind med din email
+  </UButton>
 </template>
