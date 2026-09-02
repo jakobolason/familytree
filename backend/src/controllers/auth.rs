@@ -21,6 +21,7 @@ async fn login(
             };
 
             // Verify password
+            // TODO: Add salt (and pepper?)
             if !hash::verify_password(&params.password, &user.password) {
                 return unauthorized("unauthorized!");
             }
