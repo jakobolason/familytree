@@ -12,6 +12,7 @@ use petgraph::{Direction, graph::NodeIndex, visit::EdgeRef};
 use std::{collections::HashMap, path::Path};
 
 pub const RANDOM_PASSWD_LENGTH: i8 = 20;
+const PIVOT: u32 = 26;
 
 // Only describes a person and their immediate children
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -142,6 +143,28 @@ fn recursive_children(family: &FamilyGraph, node: NodeIndex) -> D3Node {
     }
 }
 
+fn parse_birthdate(birthdate: &str) -> Option<NaiveDate> {
+    let parts: Vec<&str> = birthdate.split(".").collect();
+    if parts.len() != 3 {
+        return None;
+    }
+    let day: u32 = parts[0].parse().ok()?;
+    let month = parts[1].parse().ok()?;
+    let year_str = parts[2];
+    let year: u32 = year_str.parse().ok()?;
+    let full_year = if year_str.len() == 4 {
+        year
+    } else {
+        if year <= PIVOT {
+            year + 2000
+        } else {
+            year + 1900
+        }
+    };
+
+    NaiveDate::from_ymd_opt(full_year as i32, month, day)
+}
+
 async fn create_medlem(
     db: &DatabaseConnection,
     full_name: String,
@@ -155,28 +178,25 @@ async fn create_medlem(
         // TODO: Should check that the fields in db correspond to current values
         Ok(model) => model,
         Err(ModelError::EntityNotFound) => {
-            // TODO
-            let (birthdate, final_date) =
-                match NaiveDate::parse_from_str(&person.birthdate, "%d.%m.%Y") {
-                    Ok(date) => (Some(date), None),
-                    Err(_) => {
-                        let parts: Vec<&str> =
-                            person.birthdate.split('-').map(|s| s.trim()).collect();
-                        if parts.len() == 2 {
-                            let parse_year = |y_str: &str| -> Option<NaiveDate> {
-                                y_str
-                                    .parse::<i32>()
-                                    .ok()
-                                    .and_then(|y| NaiveDate::from_ymd_opt(y, 1, 1))
-                            };
-                            let start = parse_year(parts[0]);
-                            let end = parse_year(parts[1]);
-                            (start, end)
-                        } else {
-                            (None, None)
-                        }
+            let (birthdate, final_date) = match parse_birthdate(&person.birthdate) {
+                Some(date) => (Some(date), None),
+                None => {
+                    let parts: Vec<&str> = person.birthdate.split('-').map(|s| s.trim()).collect();
+                    if parts.len() == 2 {
+                        let parse_year = |y_str: &str| -> Option<NaiveDate> {
+                            y_str
+                                .parse::<i32>()
+                                .ok()
+                                .and_then(|y| NaiveDate::from_ymd_opt(y, 1, 1))
+                        };
+                        let start = parse_year(parts[0]);
+                        let end = parse_year(parts[1]);
+                        (start, end)
+                    } else {
+                        (None, None)
                     }
-                };
+                }
+            };
             // Create new medlem entry
             let new_medlem = medlem::ActiveModel {
                 pid: Set(Uuid::new_v4()),
