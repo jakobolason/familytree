@@ -165,6 +165,78 @@ fn parse_birthdate(birthdate: &str) -> Option<NaiveDate> {
     NaiveDate::from_ymd_opt(full_year as i32, month, day)
 }
 
+fn check_discrepancy<'a>(
+    given: &'a str,
+    found: &Option<String>,
+    name: &str,
+    overwrite: bool,
+) -> Option<&'a str> {
+    if let Some(found) = found
+        && given != found
+    {
+        if overwrite {
+            Some(given)
+        } else {
+            tracing::info!(
+                "{} discrepancy found! given: {}, found: {}",
+                name,
+                given,
+                found
+            );
+            None
+        }
+    } else {
+        None
+    }
+}
+
+fn found_discrepancies(
+    person: Person,
+    model: &medlem::Model,
+    overwrite: bool,
+) -> Option<medlem::ChangeableFields> {
+    let name = check_discrepancy(&person.name, &Some(model.name.clone()), "Name", overwrite);
+    let phone_nr = check_discrepancy(
+        &person.mobile_number,
+        &model.phone_nr,
+        "Mobile number",
+        overwrite,
+    );
+    let address = check_discrepancy(&person.address, &model.address, "Address", overwrite);
+    let birthdate = check_discrepancy(
+        &person.birthdate,
+        &model.birthdate.map(|b| b.format("%Y-%m-%d").to_string()),
+        "Birthdate",
+        overwrite,
+    );
+    let city = check_discrepancy(&person.city, &model.city, "City", overwrite);
+    let email = check_discrepancy(
+        &person.email,
+        &Some(model.email.clone()),
+        "Email",
+        overwrite,
+    );
+
+    if name.is_none()
+        && phone_nr.is_none()
+        && address.is_none()
+        && birthdate.is_none()
+        && city.is_none()
+        && email.is_none()
+    {
+        None
+    } else {
+        Some(medlem::ChangeableFields {
+            phone_nr: phone_nr.map(|p| p.to_string()),
+            address: address.map(|a| a.to_string()),
+            birthdate: birthdate.map(|b| b.to_string()),
+            email: email.map(|e| e.to_string()),
+            city: city.map(|c| c.to_string()),
+            name: name.map(|n| n.to_string()),
+        })
+    }
+}
+
 async fn create_medlem(
     db: &DatabaseConnection,
     full_name: String,
@@ -175,8 +247,16 @@ async fn create_medlem(
     // Now we create models for all people, and ensure that the information is up to date
     let exists = medlem::Model::find_by_name(db, &full_name).await;
     let model = match exists {
-        // TODO: Should check that the fields in db correspond to current values
-        Ok(model) => model,
+        Ok(model) => {
+            if let Some(changeable_fields) = found_discrepancies(person, &model, false) {
+                let model = model
+                    .into_active_model()
+                    .change_fields(db, "123", changeable_fields)
+                    .await?;
+                return Ok(model);
+            }
+            model
+        }
         Err(ModelError::EntityNotFound) => {
             let (birthdate, final_date) = match parse_birthdate(&person.birthdate) {
                 Some(date) => (Some(date), None),

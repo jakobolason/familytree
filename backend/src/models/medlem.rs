@@ -1,5 +1,5 @@
 pub use super::_entities::medlem::{ActiveModel, Entity, Model};
-use sea_orm::{entity::prelude::*, ActiveValue::Set};
+use sea_orm::{ActiveValue::Set, entity::prelude::*};
 use serde::{Deserialize, Serialize};
 pub type Medlem = Entity;
 
@@ -63,6 +63,8 @@ pub struct ChangeableFields {
     pub phone_nr: Option<String>,
     pub address: Option<String>,
     pub city: Option<String>,
+    pub birthdate: Option<String>,
+    pub name: Option<String>,
 }
 
 // implement your write-oriented logic here
@@ -76,6 +78,7 @@ impl ActiveModel {
     ) -> ModelResult<Model> {
         let req_pid: Uuid = user::Model::find_by_pid(db, req_pid).await?.pid;
         let is_owner = self.pid == Set(req_pid);
+        // TODO: Make issue to make ActiveValue<UUID> -> UUID part of the struct
         let is_editor =
             medlem_editors::Model::is_user_editor(db, &self.pid.clone().unwrap(), &req_pid).await?;
 
