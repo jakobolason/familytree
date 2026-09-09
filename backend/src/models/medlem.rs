@@ -3,7 +3,10 @@ use sea_orm::{ActiveValue::Set, entity::prelude::*};
 use serde::{Deserialize, Serialize};
 pub type Medlem = Entity;
 
-use crate::models::{_entities::medlem, medlem_editors, user};
+use crate::{
+    models::{_entities::medlem, medlem_editors, user},
+    parse_birthdate,
+};
 
 use loco_rs::{
     model::{ModelError, ModelResult},
@@ -97,6 +100,12 @@ impl ActiveModel {
         }
         if let Some(city) = fields.city {
             self.city = Set(Some(city));
+        }
+        if let Some(birthdate) = fields.birthdate {
+            self.birthdate = Set(parse_birthdate(&birthdate));
+        }
+        if let Some(name) = fields.name {
+            self.name = Set(name);
         }
 
         self.update(db).await.map_err(ModelError::from)

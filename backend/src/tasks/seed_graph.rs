@@ -1,5 +1,8 @@
-use crate::models::{
-    _entities::user, family_tree::ActiveModel as FamilyTreeActive, medlem, medlem_editors,
+use crate::{
+    models::{
+        _entities::user, family_tree::ActiveModel as FamilyTreeActive, medlem, medlem_editors,
+    },
+    parse_birthdate,
 };
 use chrono::{NaiveDate, Utc};
 use family_graph::{
@@ -12,7 +15,6 @@ use petgraph::{Direction, graph::NodeIndex, visit::EdgeRef};
 use std::{collections::HashMap, path::Path};
 
 pub const RANDOM_PASSWD_LENGTH: i8 = 20;
-const PIVOT: u32 = 26;
 
 // Only describes a person and their immediate children
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -142,28 +144,28 @@ fn recursive_children(family: &FamilyGraph, node: NodeIndex) -> D3Node {
         partner,
     }
 }
-
-fn parse_birthdate(birthdate: &str) -> Option<NaiveDate> {
-    let parts: Vec<&str> = birthdate.split(".").collect();
-    if parts.len() != 3 {
-        return None;
-    }
-    let day: u32 = parts[0].parse().ok()?;
-    let month = parts[1].parse().ok()?;
-    let year_str = parts[2];
-    let year: u32 = year_str.parse().ok()?;
-    let full_year = if year_str.len() == 4 {
-        year
-    } else {
-        if year <= PIVOT {
-            year + 2000
-        } else {
-            year + 1900
-        }
-    };
-
-    NaiveDate::from_ymd_opt(full_year as i32, month, day)
-}
+//
+// pub fn parse_birthdate(birthdate: &str) -> Option<NaiveDate> {
+//     let parts: Vec<&str> = birthdate.split(".").collect();
+//     if parts.len() != 3 {
+//         return None;
+//     }
+//     let day: u32 = parts[0].parse().ok()?;
+//     let month = parts[1].parse().ok()?;
+//     let year_str = parts[2];
+//     let year: u32 = year_str.parse().ok()?;
+//     let full_year = if year_str.len() == 4 {
+//         year
+//     } else {
+//         if year <= PIVOT {
+//             year + 2000
+//         } else {
+//             year + 1900
+//         }
+//     };
+//
+//     NaiveDate::from_ymd_opt(full_year as i32, month, day)
+// }
 
 fn check_discrepancy<'a>(
     given: &'a str,
