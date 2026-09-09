@@ -2,16 +2,20 @@
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
-const toast = useToast()
-const route = useRoute()
+const toast = useToast();
+const route = useRoute();
 
-const schema = z.object({
-  password: z.string().min(8, "Adgangskoden skal være mindst 8 karakterer"),
-  confirmPassword: z.string().min(8, "Adgangskoden skal være mindst 8 karakterer")
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Adgangskoderne er ikke de samme",
-  path: ["confirmPassword"],
-});
+const schema = z
+  .object({
+    password: z.string().min(8, "Adgangskoden skal være mindst 8 karakterer"),
+    confirmPassword: z
+      .string()
+      .min(8, "Adgangskoden skal være mindst 8 karakterer"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Adgangskoderne er ikke de samme",
+    path: ["confirmPassword"],
+  });
 
 type Schema = z.output<typeof schema>;
 
@@ -22,12 +26,12 @@ const state = reactive<Partial<Schema>>({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    let response = await $fetch('/api/auth/reset', {
-      method: 'POST',
+    let response = await $fetch("/api/auth/reset", {
+      method: "POST",
       body: {
         password: event.data.password,
-      }
-    })
+      },
+    });
 
     toast.add({
       title: "Success",
@@ -36,7 +40,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
 
     //await navigateTo('/');
-
   } catch (error) {
     toast.add({
       title: "Error",
@@ -48,17 +51,26 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="w-full max-w-sm mx-auto flex flex-col gap-10">
+  <div
+    class="w-full max-w-sm mx-auto flex flex-col gap-10 items-center justify-center"
+  >
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormField label="Ny adgangskode" name="password">
-        <UInput v-model="state.password" type="password" placeholder="Super sikkert kodeord" />
+        <UInput
+          v-model="state.password"
+          type="password"
+          placeholder="Super sikkert kodeord"
+        />
       </UFormField>
 
       <UFormField label="Bekræft adgangskode" name="confirmPassword">
-        <UInput v-model="state.confirmPassword" type="password" placeholder="Gentag sikre kodeord" />
+        <UInput
+          v-model="state.confirmPassword"
+          type="password"
+          placeholder="Gentag sikre kodeord"
+        />
       </UFormField>
       <UButton type="submit"> Reset Password </UButton>
     </UForm>
-
   </div>
 </template>
