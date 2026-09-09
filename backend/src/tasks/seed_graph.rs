@@ -243,12 +243,13 @@ async fn create_medlem(
     person: Person,
     user_pid: Option<Uuid>,
     partner_pid: Option<Uuid>,
+    overwrite: bool,
 ) -> Result<medlem::Model> {
     // Now we create models for all people, and ensure that the information is up to date
     let exists = medlem::Model::find_by_name(db, &full_name).await;
     let model = match exists {
         Ok(model) => {
-            if let Some(changeable_fields) = found_discrepancies(person, &model, false) {
+            if let Some(changeable_fields) = found_discrepancies(person, &model, overwrite) {
                 let model = model
                     .into_active_model()
                     .change_fields(db, "123", changeable_fields)
@@ -347,6 +348,8 @@ impl Task for SeedTree {
     async fn run(&self, app_context: &AppContext, vars: &task::Vars) -> Result<()> {
         tracing::info!("Family Tree D3 Export Task...");
         let path = vars.cli_arg("path");
+        let overwrite = vars.cli_arg("overwrite").is_ok();
+        tracing::info!("Overwrite is set to: {}", overwrite);
 
         let default_path = "family_data.xls";
         let file_path = match path {
@@ -410,6 +413,7 @@ impl Task for SeedTree {
                     partner.clone(),
                     user_pid,
                     None,
+                    overwrite,
                 )
                 .await
                 {
@@ -440,6 +444,7 @@ impl Task for SeedTree {
                 person.clone(),
                 user_pid,
                 partner_pid,
+                overwrite,
             )
             .await
             {
