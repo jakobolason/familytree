@@ -3,10 +3,7 @@ use sea_orm::{ActiveValue::Set, entity::prelude::*};
 use serde::{Deserialize, Serialize};
 pub type Medlem = Entity;
 
-use crate::{
-    models::{_entities::medlem, medlem_editors, user},
-    parse_birthdate,
-};
+use crate::models::{_entities::medlem, medlem_editors, user};
 
 use loco_rs::{
     model::{ModelError, ModelResult},
@@ -102,7 +99,10 @@ impl ActiveModel {
             self.city = Set(Some(city));
         }
         if let Some(birthdate) = fields.birthdate {
-            self.birthdate = Set(parse_birthdate(&birthdate));
+            if let Ok(parsed_birthday) = Date::parse_from_str(&birthdate, "%Y-%m-%d") {
+                tracing::info!("Got birthdate! {}\n, {:?}", birthdate, parsed_birthday);
+                self.birthdate = Set(Some(parsed_birthday));
+            }
         }
         if let Some(name) = fields.name {
             self.name = Set(name);
