@@ -48,5 +48,5 @@ required-features = []
 [dev-dependencies]
 loco-rs = { workspace = true, features = ["testing"] }
 serial_test = { version = "4.0.1" }
-rstest = { version = "0.26.1" }
+rstest = { version = "0.27.0" }
 insta = { version = "1.48", features = ["redactions", "yaml", "filters"] }

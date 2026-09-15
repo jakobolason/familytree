@@ -21,7 +21,6 @@ async fn login(
             };
 
             // Verify password
-            // TODO: Add salt (and pepper?)
             if !hash::verify_password(&params.password, &user.password) {
                 return unauthorized("unauthorized!");
             }
@@ -40,7 +39,6 @@ async fn login(
     };
 
     tracing::info!("User {} logged in", user.email);
-    println!("user login method verified!");
     // Generate the JWT
     let jwt_secret = ctx.config.get_jwt_config()?;
     let token = jwt::JWT::new(&jwt_secret.secret)
