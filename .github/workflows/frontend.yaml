@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm run lint --if-present
+        run: pnpm run lint
 
       # TODO: once you have Nuxt tests (e.g. Vitest + @nuxt/test-utils),
       # add a step here: `run: pnpm run test`
