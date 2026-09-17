@@ -99,7 +99,6 @@ workers:
 database:
   # Database connection URI
   uri: "postgresql://dev:devpassword@localhost:5432/myapp"
-  # {{ get_env(name="DATABASE_URL") }}
   # When enabled, the sql query will be logged.
   enable_logging: true
   # Set the timeout duration when acquiring a connection.

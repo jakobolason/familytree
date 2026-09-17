@@ -2,14 +2,14 @@ use std::path::Path;
 
 use async_trait::async_trait;
 use loco_rs::{
+    Result,
     app::{AppContext, Hooks},
     bgworker::Queue,
-    boot::{create_app, BootResult, StartMode},
+    boot::{BootResult, StartMode, create_app},
     config::Config,
     controller::AppRoutes,
     environment::Environment,
     task::Tasks,
-    Result,
 };
 use migration::Migrator;
 
@@ -39,22 +39,6 @@ impl Hooks for App {
     ) -> Result<BootResult> {
         create_app::<Self, Migrator>(mode, environment, config).await
     }
-
-    // async fn initializers(
-    //     router: axum::Router,
-    //     _ctx: &AppContext,
-    // ) -> Result<axum::Router> {
-    //     println!("Loading family tree cache from database...");
-    //     if let Err(e) = FamilyTree::load_cache_from_db(&_ctx.db).await {
-    //         eprintln!(
-    //             "Warning: Failed to load family tree cache from database: {}",
-    //             e
-    //         );
-    //     } else {
-    //         println!("Family tree cache loaded from database.");
-    //     }
-    //     Ok(router)
-    // }
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
         // Register all routes
