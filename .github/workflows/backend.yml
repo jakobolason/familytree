@@ -2,12 +2,12 @@ name: Backend CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "backend/**"
       - ".github/workflows/backend.yml"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - "backend/**"
 
@@ -28,21 +28,21 @@ jobs:
 
     # If loco needs a real Postgres for tests, uncomment this block and
     # point config/test.yaml at localhost:5432 with these credentials.
-     services:
-       postgres:
-         image: postgres:16
-         env:
-           POSTGRES_USER: test
-           POSTGRES_PASSWORD: testpassword
-           POSTGRES_DB: testdb
-         ports:
-           - 5433:5432
-         options: >-
-           --health-cmd pg_isready
-           --health-interval 10s
-           --health-timeout 5s
-           --health-retries 5
-  
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
