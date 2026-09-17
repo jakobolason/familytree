@@ -1,5 +1,5 @@
-[workspace]
-exclude = ["migration"]
+# [workspace]
+# exclude = ["migration"]
 
 [package]
 name = "familyserver_backend"

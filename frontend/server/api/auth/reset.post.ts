@@ -1,5 +1,3 @@
-
-
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event)
   const sessionToken = session.secure?.apiToken
@@ -7,7 +5,6 @@ export default defineEventHandler(async (event) => {
   if (!sessionToken) {
     throw createError({ statusCode: 401, statusMessage: 'No token found' })
   }
-
 
   const body = await readBody(event)
   const config = useRuntimeConfig()
@@ -19,5 +16,4 @@ export default defineEventHandler(async (event) => {
       Authorization: `Bearer ${sessionToken}`
     }
   })
-
 })

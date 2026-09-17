@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
   const { loggedIn } = useUserSession()
 
   // 1. Check if the page is marked as public

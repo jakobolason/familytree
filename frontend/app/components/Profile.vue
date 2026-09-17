@@ -1,33 +1,33 @@
 <script setup lang="ts">
-const { isOpen } = useProfile();
-const { user } = useUserSession();
+const { isOpen } = useProfile()
+// const { user } = useUserSession()
 
-const {
-  data: medlem_pids,
-  status,
-  error,
-} = await useFetch("/api/user/medlem_pids");
+const { data: medlem_pids, error } = await useFetch('/api/user/medlem_pids')
 
 if (error.value) {
-  console.log("API Error:", error.value.statusCode, error.value.statusMessage);
+  console.log('API Error:', error.value.statusCode, error.value.statusMessage)
 }
-console.log("medlem_pids: ", medlem_pids.value);
+console.log('medlem_pids: ', medlem_pids.value)
 const items = [
   {
-    label: "Oplysninger",
-    icon: "i-heroicons-user",
-    slot: "info", // Defines which #slot to render
+    label: 'Oplysninger',
+    icon: 'i-heroicons-user',
+    slot: 'info'
   },
   {
-    label: "Skift Adgangskode",
-    icon: "i-heroicons-key",
-    slot: "password",
-  },
-];
+    label: 'Skift Adgangskode',
+    icon: 'i-heroicons-key',
+    slot: 'password'
+  }
+]
 </script>
 
 <template>
-  <UModal v-model:open="isOpen" title="Profil Indstillinger" size="xxl">
+  <UModal
+    v-model:open="isOpen"
+    title="Profil Indstillinger"
+    size="xxl"
+  >
     <template #body>
       <UTabs
         orientation="horizontal"
@@ -35,7 +35,7 @@ const items = [
         class="w-full h-[500px] gap-8"
         :ui="{
           list: { width: 'w-48', tab: { height: 'h-12' } },
-          container: 'h-full',
+          container: 'h-full'
         }"
       >
         <template #info>

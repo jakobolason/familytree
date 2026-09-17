@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
   try {
-    const magicResponse = await $fetch(`${config.authOrigin}/api/magic-link`, {
+    await $fetch(`${config.authOrigin}/api/magic-link`, {
       method: 'POST',
       body: body
     })

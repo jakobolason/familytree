@@ -1,6 +1,6 @@
 interface LoginResponse {
-  token: string,
-  pid: string,
+  token: string
+  pid: string
   name: string
 }
 
@@ -19,12 +19,12 @@ export default defineEventHandler(async (event) => {
     await setUserSession(event, {
       user: {
         pid: loginResponse.pid,
-        name: loginResponse.name,
+        name: loginResponse.name
       },
       secure: {
         apiToken: loginResponse.token
       },
-      loggedInAt: new Date(),
+      loggedInAt: new Date()
     })
 
     return { ok: true }

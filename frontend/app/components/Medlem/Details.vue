@@ -1,34 +1,33 @@
 <script setup lang="ts">
 interface MemberResponse {
   medlem: {
-    name: string;
-    email?: string | null;
-    phone_nr?: string | null;
-    address?: string | null;
-    city?: string | null;
-    birthdate?: string | null;
-    finalDate?: string | null;
+    name: string
+    email?: string | null
+    phone_nr?: string | null
+    address?: string | null
+    city?: string | null
+    birthdate?: string | null
+    finalDate?: string | null
   }
-  parents_pid?: any;
-  children_pid?: any;
-  partner_pid?: string | null;
-  previous_partners?: any;
+  parents_pid?: any
+  children_pid?: any
+  partner_pid?: string | null
+  previous_partners?: any
 }
 
 const props = defineProps<{
   member: MemberResponse
-}>();
+}>()
 
 const partnerLabel = computed(() => {
-  if (!props.member.partner) return 'Partner';
+  if (!props.member.partner) return 'Partner'
 
   if (props.member.partner.finalDate) {
-    return 'Afdød partner';
+    return 'Afdød partner'
   }
 
-  return 'Partner';
-});
-
+  return 'Partner'
+})
 </script>
 
 <template>
@@ -40,8 +39,10 @@ const partnerLabel = computed(() => {
           Relationer
         </h3>
         <div>
-
-          <UCard :ui="{ body: { padding: 'p-3' } }" class="col-span-2">
+          <UCard
+            :ui="{ body: { padding: 'p-3' } }"
+            class="col-span-2"
+          >
             <div>
               <span class="text-xs text-gray-500 uppercase">{{ partnerLabel }}</span>
               <MedlemContact :medlem="member.partner" />

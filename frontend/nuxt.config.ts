@@ -1,22 +1,25 @@
 export default defineNuxtConfig({
   modules: [
-    "@nuxt/eslint",
-    "@nuxt/ui",
-    "@nuxt/hints",
-    "@nuxt/image",
-    "@nuxt/test-utils",
-    'nuxt-auth-utils',
+    '@nuxt/eslint',
+    '@nuxt/ui',
+    '@nuxt/hints',
+    '@nuxt/image',
+    '@nuxt/test-utils',
+    'nuxt-auth-utils'
   ],
 
   devtools: {
-    enabled: true,
+    enabled: true
+  },
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon2.png' }
+      ]
+    }
   },
 
-  css: ["~/assets/css/main.css"],
-
-  routeRules: {
-    "/": { prerender: true },
-  },
+  css: ['~/assets/css/main.css'],
 
   colorMode: {
     preference: 'light'
@@ -31,12 +34,9 @@ export default defineNuxtConfig({
       apiEndpoint: process.env.AUTH_ORIGIN
     }
   },
-  app: {
-    head: {
-      link: [
-        { rel: 'icon', type: 'image/png', href: '/favicon2.png' },
-      ]
-    }
+
+  routeRules: {
+    '/': { prerender: true }
   },
 
   // auth: {
@@ -77,14 +77,14 @@ export default defineNuxtConfig({
   //   }
   // },
 
-  compatibilityDate: "2025-01-15",
+  compatibilityDate: '2025-01-15',
 
   eslint: {
     config: {
       stylistic: {
-        commaDangle: "never",
-        braceStyle: "1tbs",
-      },
-    },
-  },
-});
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  }
+})

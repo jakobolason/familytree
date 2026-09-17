@@ -1,88 +1,105 @@
 <script setup lang="ts">
-import * as z from "zod";
-import type { FormSubmitEvent } from "@nuxt/ui";
-const { fetch } = useUserSession();
+import * as z from 'zod'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
-const toast = useToast();
+const { fetch } = useUserSession()
+
+const toast = useToast()
 
 const schema = z.object({
-  email: z.email("Invalid email"),
+  email: z.email('Invalid email'),
   password: z
-    .string("Password is required")
-    .min(8, "Must be at least 8 characters"),
-});
+    .string('Password is required')
+    .min(8, 'Must be at least 8 characters')
+})
 
-type Schema = z.output<typeof schema>;
+type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
   email: undefined,
-  password: undefined,
-});
+  password: undefined
+})
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    //const result = await signIn({
-    //dev/  email: event.data.email,
+    // const result = await signIn({
+    // dev/  email: event.data.email,
     //  password: event.data.password,
-    //}, {callbackUrl: '/'});
+    // }, {callbackUrl: '/'});
 
-    console.log("checking backend...");
-    let response = await $fetch("/api/auth/login", {
-      method: "POST",
+    console.log('checking backend...')
+    const response = await $fetch('/api/auth/login', {
+      method: 'POST',
       body: {
         email: event.data.email,
-        password: event.data.password,
-      },
-    });
+        password: event.data.password
+      }
+    })
 
     if (!response?.ok) {
       toast.add({
-        title: "Authentication Failed",
-        description: result.error || "Invalid email or password.",
-        color: "error",
-      });
+        title: 'Authentication Failed',
+        description: result.error || 'Invalid email or password.',
+        color: 'error'
+      })
     } else {
-      await fetch();
+      await fetch()
       toast.add({
-        title: "Success",
-        description: "You have been logged in successfully.",
-        color: "success",
-      });
-      await navigateTo("/");
+        title: 'Success',
+        description: 'You have been logged in successfully.',
+        color: 'success'
+      })
+      await navigateTo('/')
     }
   } catch (error) {
-    if (String(error).includes("FetchError")) {
-      console.error("Unauthorized credentials");
+    if (String(error).includes('FetchError')) {
+      console.error('Unauthorized credentials')
       toast.add({
-        title: "Authentication Failed",
-        description: "Invalid email or password.",
-        color: "error",
-      });
+        title: 'Authentication Failed',
+        description: 'Invalid email or password.',
+        color: 'error'
+      })
     } else {
       toast.add({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        color: "error",
-      });
-      console.error("Login error:");
-      console.log(error);
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+        color: 'error'
+      })
+      console.error('Login error:')
+      console.log(error)
     }
   }
-  console.log(event.data);
+  console.log(event.data)
 }
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="Email" name="email">
+  <UForm
+    :schema="schema"
+    :state="state"
+    class="space-y-4"
+    @submit="onSubmit"
+  >
+    <UFormField
+      label="Email"
+      name="email"
+    >
       <UInput v-model="state.email" />
     </UFormField>
 
-    <UFormField label="Adgangskode" name="password">
-      <UInput v-model="state.password" type="password" />
+    <UFormField
+      label="Adgangskode"
+      name="password"
+    >
+      <UInput
+        v-model="state.password"
+        type="password"
+      />
     </UFormField>
 
-    <UButton type="submit"> Log ind </UButton>
+    <UButton type="submit">
+      Log ind
+    </UButton>
   </UForm>
   <p>Første gang du logger ind?</p>
   <UButton :to="{ name: 'magic-link' }">

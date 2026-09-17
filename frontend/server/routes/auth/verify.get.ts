@@ -31,9 +31,9 @@ export default defineEventHandler(async (event) => {
 
     // 3. Redirect to dashboard
     return sendRedirect(event, '/dashboard')
-
-  } catch (error) {
+  } catch (error: any) {
     // Redirect to login with error if token is invalid
+    console.error(error)
     return sendRedirect(event, '/login?error=invalid_token')
   }
 })
