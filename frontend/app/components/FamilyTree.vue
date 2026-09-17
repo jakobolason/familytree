@@ -1,72 +1,81 @@
 <script setup lang="ts">
-import * as d3 from "d3";
+import * as d3 from 'd3'
 
-const { openMedlemNode } = useMedlemNode();
-const { treeData, nodes, links, status, error } = useFamilyTree();
+const { openMedlemNode } = useMedlemNode()
+const { nodes, links, status, error } = useFamilyTree()
 
-const containerRef = ref<HTMLElement | null>(null);
-const svgRef = ref<SVGElement | null>(null);
-const gRef = ref<SVGElement | null>(null);
+const containerRef = ref<HTMLElement | null>(null)
+const svgRef = ref<SVGElement | null>(null)
+const gRef = ref<SVGElement | null>(null)
 
-const zoom = d3.zoom().on("zoom", (event) => {
+const zoom = d3.zoom().on('zoom', (event) => {
   if (gRef.value) {
-    d3.select(gRef.value).attr("transform", event.transform);
+    d3.select(gRef.value).attr('transform', event.transform)
   }
-});
+})
 
 function resetZoom() {
-  if (!svgRef.value) return;
-  const svg = d3.select(svgRef.value);
+  if (!svgRef.value) return
+  const svg = d3.select(svgRef.value)
   svg
     .transition()
     .duration(750)
-    .call(zoom.transform, d3.zoomIdentity.translate(100, 50).scale(1));
+    .call(zoom.transform, d3.zoomIdentity.translate(100, 50).scale(1))
 }
 
 function setSvg() {
   if (nodes.value.length > 0 && svgRef.value) {
-    const svg = d3.select(svgRef.value);
+    const svg = d3.select(svgRef.value)
 
     // Attach zoom handler
-    svg.call(zoom);
+    svg.call(zoom)
 
     // Initial Position: slightly offset so the root isn't cut off
     svg.call(
       zoom.transform,
       d3.zoomIdentity
         .translate(100, (containerRef.value?.clientHeight || 500) / 2)
-        .scale(1),
-    );
+        .scale(1)
+    )
   }
 }
 
 onMounted(() => {
   if (nodes.value) {
-    setSvg();
+    setSvg()
   }
-});
+})
 
 // When data loads, set up the zoom
 watch(
   nodes,
   () => {
-    setSvg();
+    setSvg()
   },
-  { flush: "post" },
-); // 'post' ensures DOM elements exist
+  { flush: 'post' }
+) // 'post' ensures DOM elements exist
 </script>
+
 <template>
-  <div v-if="status === 'pending'">Loading tree...</div>
-  <div v-else-if="error">ERROR: {{ error }}</div>
+  <div v-if="status === 'pending'">
+    Loading tree...
+  </div>
+  <div v-else-if="error">
+    ERROR: {{ error }}
+  </div>
 
   <div
     v-else
     ref="containerRef"
     class="w-full h-[600px] md:h-screen bg-gray-50 overflow-hidden relative cursor-move"
   >
-    <!-- TODO: Make sure this can always be focused-->
+    <!-- TODO: Make sure this can always be focused -->
     <!-- someyhinh about ensuring svg.call(zoom) is always called -->
-    <svg ref="svgRef" width="100%" height="100%">
+    <svg
+      ref="svgRef"
+      width="100%"
+      height="100%"
+    >
       <g ref="gRef">
         <g class="links">
           <path
@@ -105,8 +114,8 @@ watch(
     </svg>
 
     <UButton
-      @click="resetZoom"
       class="absolute bottom-4 right-4 p-2 rounded shadow text-sm"
+      @click="resetZoom"
     >
       Reset View
     </UButton>
