@@ -27,8 +27,13 @@ jobs:
 
       # pnpm has to exist on PATH before setup-node's pnpm cache step
       # can find it (it shells out to `pnpm store path`).
-      - name: Enable corepack (pnpm)
-        run: corepack enable
+      # - name: Enable corepack (pnpm)
+      # run: corepack enable
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          with: 10.23.0
+          run_install: false
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -43,7 +48,7 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-      # TODO: once you have Nuxt tests (e.g. Vitest + @nuxt/test-utils),
+      # TODO: once you have Nuxt tests,
       # add a step here: `run: pnpm run test`
       # and make the docker job below depend on this one succeeding,
       # same pattern as the backend workflow (needs: test).
