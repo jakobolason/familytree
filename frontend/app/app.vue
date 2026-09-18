@@ -7,8 +7,8 @@ useHead({
   }
 })
 
-const title = 'Vestergaard familien'
-const description = 'Familie træ'
+const title = 'Wistoft og Vestergaard familien'
+const description = 'Familie træ og kontakt information'
 
 useSeoMeta({
   title,
