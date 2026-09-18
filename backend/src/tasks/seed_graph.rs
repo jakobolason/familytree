@@ -1,5 +1,8 @@
 use crate::models::{
-    _entities::user, family_tree::ActiveModel as FamilyTreeActive, medlem, medlem_editors,
+    _entities::user,
+    family_tree::ActiveModel as FamilyTreeActive,
+    medlem::{self, check_discrepancy},
+    medlem_editors,
 };
 use chrono::{NaiveDate, Utc};
 use family_graph::{
@@ -164,57 +167,36 @@ fn recursive_children(family: &FamilyGraph, node: NodeIndex) -> D3Node {
 //     NaiveDate::from_ymd_opt(full_year as i32, month, day)
 // }
 
-fn check_discrepancy<'a>(
-    given: &'a str,
-    found: &Option<String>,
-    name: &str,
-    overwrite: bool,
-) -> Option<&'a str> {
-    if let Some(found) = found
-        && given != found
-    {
-        if overwrite {
-            Some(given)
-        } else {
-            tracing::info!(
-                "{} discrepancy found! given: {}, found: {}",
-                name,
-                given,
-                found
-            );
-            None
-        }
-    } else {
-        None
-    }
-}
-
 fn found_discrepancies(
     person: Person,
     model: &medlem::Model,
     overwrite: bool,
 ) -> Option<medlem::ChangeableFields> {
-    let name = check_discrepancy(&person.name, &Some(model.name.clone()), "Name", overwrite);
+    // NOTE: This can only be done, when the nanme is found with the PID
+    let name = check_discrepancy(&person.name, Some(&model.name), "Name", overwrite);
     let phone_nr = check_discrepancy(
         &person.mobile_number,
-        &model.phone_nr,
+        model.phone_nr.as_deref(),
         "Mobile number",
         overwrite,
     );
-    let address = check_discrepancy(&person.address, &model.address, "Address", overwrite);
+    let address = check_discrepancy(
+        &person.address,
+        model.address.as_deref(),
+        "Address",
+        overwrite,
+    );
     let birthdate = check_discrepancy(
         &person.birthdate,
-        &model.birthdate.map(|b| b.format("%Y-%m-%d").to_string()),
+        model
+            .birthdate
+            .map(|b| b.format("%Y-%m-%d").to_string())
+            .as_deref(),
         "Birthdate",
         overwrite,
     );
-    let city = check_discrepancy(&person.city, &model.city, "City", overwrite);
-    let email = check_discrepancy(
-        &person.email,
-        &Some(model.email.clone()),
-        "Email",
-        overwrite,
-    );
+    let city = check_discrepancy(&person.city, model.city.as_deref(), "City", overwrite);
+    let email = check_discrepancy(&person.email, Some(&model.email), "Email", overwrite);
 
     if name.is_none()
         && phone_nr.is_none()
@@ -229,6 +211,7 @@ fn found_discrepancies(
             phone_nr: phone_nr.map(|p| p.to_string()),
             address: address.map(|a| a.to_string()),
             birthdate: birthdate.map(|b| b.to_string()),
+            final_date: None,
             email: email.map(|e| e.to_string()),
             city: city.map(|c| c.to_string()),
             name: name.map(|n| n.to_string()),
@@ -267,6 +250,8 @@ async fn create_medlem(
     partner_pid: Option<Uuid>,
     overwrite: bool,
 ) -> Result<medlem::Model> {
+    // TODO: If a persons name is changed, then this lookup will not work anymore
+
     // Now we create models for all people, and ensure that the information is up to date
     let exists = medlem::Model::find_by_name(db, &full_name).await;
     let model = match exists {
@@ -274,7 +259,7 @@ async fn create_medlem(
             if let Some(changeable_fields) = found_discrepancies(person, &model, overwrite) {
                 let model = model
                     .into_active_model()
-                    .change_fields(db, "123", changeable_fields)
+                    .change_fields(db, changeable_fields)
                     .await?;
                 return Ok(model);
             }

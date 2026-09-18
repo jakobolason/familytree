@@ -64,14 +64,15 @@ pub struct ChangeableFields {
     pub address: Option<String>,
     pub city: Option<String>,
     pub birthdate: Option<String>,
+    pub final_date: Option<String>,
     pub name: Option<String>,
 }
 
 // implement your write-oriented logic here
 impl ActiveModel {
     /// Assumed that who has writing permissions is checked before calling this function
-    pub async fn change_fields(
-        mut self,
+    pub async fn update_fields_as_user(
+        self,
         db: &DatabaseConnection,
         req_pid: &str,
         fields: ChangeableFields,
@@ -85,7 +86,14 @@ impl ActiveModel {
         if !is_owner && !is_editor {
             return Err(ModelError::DbErr(DbErr::Custom("Unauthorized".to_owned())));
         }
+        return self.change_fields(db, fields).await;
+    }
 
+    pub async fn change_fields(
+        mut self,
+        db: &DatabaseConnection,
+        fields: ChangeableFields,
+    ) -> ModelResult<Model> {
         if let Some(email) = fields.email {
             self.email = Set(email);
         }
@@ -98,11 +106,11 @@ impl ActiveModel {
         if let Some(city) = fields.city {
             self.city = Set(Some(city));
         }
-        if let Some(birthdate) = fields.birthdate {
-            if let Ok(parsed_birthday) = Date::parse_from_str(&birthdate, "%Y-%m-%d") {
-                tracing::info!("Got birthdate! {}\n, {:?}", birthdate, parsed_birthday);
-                self.birthdate = Set(Some(parsed_birthday));
-            }
+        if let Some(birthdate) = fields.birthdate
+            && let Ok(parsed_birthday) = Date::parse_from_str(&birthdate, "%Y-%m-%d")
+        {
+            tracing::info!("Got birthdate! {}\n, {:?}", birthdate, parsed_birthday);
+            self.birthdate = Set(Some(parsed_birthday));
         }
         if let Some(name) = fields.name {
             self.name = Set(name);
@@ -114,3 +122,32 @@ impl ActiveModel {
 
 // implement your custom finders, selectors oriented logic here
 impl Entity {}
+
+pub fn check_discrepancy<'a>(
+    given: &'a str,
+    found: Option<&str>,
+    name: &str,
+    overwrite: bool,
+) -> Option<&'a str> {
+    println!(
+        "checking {} for discrepancy ! given: {}, found: {:?}",
+        name, given, found
+    );
+    if let Some(found) = found
+        && given != found
+    {
+        if overwrite {
+            Some(given)
+        } else {
+            tracing::info!(
+                "{} discrepancy found! given: {}, found: {}",
+                name,
+                given,
+                found
+            );
+            None
+        }
+    } else {
+        None
+    }
+}

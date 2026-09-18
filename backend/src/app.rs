@@ -72,6 +72,9 @@ impl Hooks for App {
         // Register all tasks
         tasks.register(tasks::seed_graph::SeedTree);
         tasks.register(tasks::seed_user::SeedUser);
+        tasks.register(tasks::alter_medlem::AlterMedlem);
+        tasks.register(tasks::print_medlem::PrintMedlem);
+        // tasks-inject
     }
 
     async fn truncate(_ctx: &AppContext) -> Result<()> {

@@ -37,7 +37,7 @@ async fn change_fields(
         .into_active_model();
 
     let result = medlem
-        .change_fields(&ctx.db, &auth.claims.pid, params.changeable_fields)
+        .update_fields_as_user(&ctx.db, &auth.claims.pid, params.changeable_fields)
         .await?;
     format::json(result)
 }
